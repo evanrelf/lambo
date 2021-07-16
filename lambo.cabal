@@ -47,3 +47,16 @@ executable lambo
   hs-source-dirs: exe
   build-depends:
     , lambo
+
+
+test-suite test
+  import:
+    , common
+    , executable
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  hs-source-dirs: test
+  build-depends:
+    , lambo
+    , tasty
+    , tasty-hunit
