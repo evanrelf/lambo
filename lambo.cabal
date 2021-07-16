@@ -31,6 +31,9 @@ library
   hs-source-dirs: lib
   exposed-modules:
     Lambo
+    Lambo.Lexer
+    Lambo.Parser
+    Lambo.Syntax
 
 
 executable lambo

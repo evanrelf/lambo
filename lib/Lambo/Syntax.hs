@@ -1,0 +1,4 @@
+module Lambo.Syntax
+  (
+  )
+where
