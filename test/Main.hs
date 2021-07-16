@@ -24,7 +24,11 @@ test_lexer :: Tasty.TestTree
 test_lexer = Tasty.testGroup "Lexer" $ mconcat
   [ successful
       [ "\\x.x"
+      , "λx.x"
+      , "\\x->x"
       , "\\ x . x"
+      , "λ x . x"
+      , "\\ x -> x"
       , "  \\x.x  "
       ]
       [ Token_Lambda
@@ -34,8 +38,12 @@ test_lexer = Tasty.testGroup "Lexer" $ mconcat
       ]
 
   , successful
-      [ "\\x y. x"
-      , "\\x y . x"
+      [ "\\x y-> x"
+      , "\\x y -> x"
+      , "\\x y ->x"
+      , "λx y. x"
+      , "λx y . x"
+      , "λx y .x"
       ]
       [ Token_Lambda
       , Token_Variable "x"
