@@ -8,7 +8,7 @@ module Lambo.Lexer
   )
 where
 
-import Control.Applicative (empty)
+import Control.Applicative (empty, (<|>))
 import Data.Foldable (asum)
 import Data.Text (Text)
 import Data.Void (Void)
@@ -54,9 +54,9 @@ parseTokens = parseSpace *> Megaparsec.manyTill parseToken Megaparsec.eof
 parseToken :: Parser Token
 parseToken = asum
   [ Token_Lambda
-      <$ parseSymbol "\\"
+      <$ (parseSymbol "λ" <|> parseSymbol "\\")
   , Token_Dot
-      <$ parseSymbol "."
+      <$ (parseSymbol "." <|> parseSymbol "->")
   , Token_Variable
       <$> parseVariable
   , Token_OpenParen
