@@ -30,6 +30,7 @@ library
   import: common
   hs-source-dirs: lib
   build-depends:
+    , Earley
     , megaparsec
     , text
   exposed-modules:
