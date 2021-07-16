@@ -23,15 +23,15 @@ import qualified Text.Megaparsec.Char.Lexer as Megaparsec.Lexer
 
 data Token
   = Token_Lambda
-    -- ^ \
+    -- ^ @\\@
   | Token_Dot
-    -- ^ .
+    -- ^ @.@
   | Token_Variable Text
-    -- ^ x
+    -- ^ @x@
   | Token_OpenParen
-    -- ^ (
+    -- ^ @(@
   | Token_CloseParen
-    -- ^ )
+    -- ^ @)@
   deriving stock (Show, Eq)
 
 
