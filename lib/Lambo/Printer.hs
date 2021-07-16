@@ -1,0 +1,4 @@
+module Lambo.Printer
+  (
+  )
+where

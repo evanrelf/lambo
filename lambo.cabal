@@ -36,6 +36,7 @@ library
     Lambo
     Lambo.Lexer
     Lambo.Parser
+    Lambo.Printer
     Lambo.Syntax
 
 
