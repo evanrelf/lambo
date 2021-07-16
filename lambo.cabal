@@ -47,6 +47,8 @@ executable lambo
   hs-source-dirs: exe
   build-depends:
     , lambo
+    , optparse-applicative
+    , text
 
 
 test-suite test
