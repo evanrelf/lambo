@@ -29,6 +29,8 @@ common executable
 library
   import: common
   hs-source-dirs: lib
+  build-depends:
+    , text
   exposed-modules:
     Lambo
     Lambo.Lexer
