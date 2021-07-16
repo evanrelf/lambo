@@ -60,6 +60,33 @@ test_lexer = Tasty.testGroup "Lexer" $ mconcat
       , Token_Dot
       , Token_Variable "baz"
       ]
+
+  , successful
+      ["\\f. (\\x. f (x x)) (\\x. f (x x))"]
+      [ Token_Lambda
+      , Token_Variable "f"
+      , Token_Dot
+      , Token_OpenParen
+      , Token_Lambda
+      , Token_Variable "x"
+      , Token_Dot
+      , Token_Variable "f"
+      , Token_OpenParen
+      , Token_Variable "x"
+      , Token_Variable "x"
+      , Token_CloseParen
+      , Token_CloseParen
+      , Token_OpenParen
+      , Token_Lambda
+      , Token_Variable "x"
+      , Token_Dot
+      , Token_Variable "f"
+      , Token_OpenParen
+      , Token_Variable "x"
+      , Token_Variable "x"
+      , Token_CloseParen
+      , Token_CloseParen
+      ]
   ]
   where
   successful :: [Text] -> [Token] -> [Tasty.TestTree]
