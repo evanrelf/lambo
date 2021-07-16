@@ -60,3 +60,4 @@ test-suite test
     , lambo
     , tasty
     , tasty-hunit
+    , text

@@ -32,7 +32,7 @@ data Token
     -- ^ (
   | Token_CloseParen
     -- ^ )
-  deriving stock Show
+  deriving stock (Show, Eq)
 
 
 type Parser = Megaparsec.Parsec Void Text
