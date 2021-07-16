@@ -30,6 +30,7 @@ library
   import: common
   hs-source-dirs: lib
   build-depends:
+    , megaparsec
     , text
   exposed-modules:
     Lambo
