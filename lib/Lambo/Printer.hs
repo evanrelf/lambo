@@ -1,3 +1,4 @@
+{-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -13,9 +14,10 @@ where
 
 import Data.Text (Text)
 import Lambo.Lexer (Token (..))
-import Lambo.Syntax (Expression (..))
+import Lambo.Syntax (Expression, ExpressionF (..))
 import Prelude hiding (print)
 
+import qualified Data.Fix as Fix
 import qualified Data.Text as Text
 
 
@@ -37,12 +39,12 @@ instance Print [Token] where
 
 
 instance Print Expression where
-  print = \case
+  print = Fix.foldFix \case
     Expression_Variable name -> name
     Expression_Abstraction variable body ->
-      "λ" <> variable <> "." <> print body
+      "λ" <> variable <> "." <> body
     Expression_Application function argument ->
-      "(" <> print function <> " " <> print argument <> ")"
+      "(" <> function <> " " <> argument <> ")"
 
 
 newtype PrintShow a = PrintShow { unPrintShow :: a }

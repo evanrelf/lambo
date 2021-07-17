@@ -13,10 +13,11 @@ where
 import Text.Earley ((<?>))
 
 import Control.Monad ((>=>))
+import Data.Fix (Fix (..))
 import Data.Foldable (asum)
 import Data.Text (Text)
 import Lambo.Lexer (Token (..), lex)
-import Lambo.Syntax (Expression (..))
+import Lambo.Syntax (Expression, ExpressionF (..))
 import Prelude hiding (lex)
 
 import qualified Data.Text as Text
@@ -62,9 +63,9 @@ grammar = mdo
 
   expressionProd <- rule "expression" do
     asum
-      [ Expression_Variable <$> variableProd
-      , abstractionProd
-      , applicationProd
+      [ Fix <$> Expression_Variable <$> variableProd
+      , Fix <$> abstractionProd
+      , Fix <$> applicationProd
       ]
 
   pure expressionProd
