@@ -39,31 +39,32 @@ parseTokens tokens =
 
 grammar :: Earley.Grammar r (Earley.Prod r Text Token Expression)
 grammar = mdo
-  let named = flip (<?>)
+  let rule name prod = Earley.rule (prod <?> name)
 
-  variable <- Earley.rule $ named "variable" do
+  variableProd <- rule "variable" do
     Earley.terminal \case
       Token_Variable name -> Just name
       _ -> Nothing
 
-  abstraction <- Earley.rule $ named "abstraction" do
+  abstractionProd <- rule "abstraction" do
     _ <- Earley.token Token_Lambda
-    variable' <- variable
+    variable <- variableProd
     _ <- Earley.token Token_Dot
-    expression' <- expression
-    pure (Expression_Abstraction variable' expression')
+    expression <- expressionProd
+    pure (Expression_Abstraction variable expression)
 
-  application <- Earley.rule $ named "application" do
+  applicationProd <- rule "application" do
     _ <- Earley.token Token_OpenParen
-    function <- expression
-    argument <- expression
+    function <- expressionProd
+    argument <- expressionProd
     _ <- Earley.token Token_CloseParen
     pure (Expression_Application function argument)
 
-  expression <- Earley.rule $ named "expression" $ asum
-    [ Expression_Variable <$> variable
-    , abstraction
-    , application
-    ]
+  expressionProd <- rule "expression" do
+    asum
+      [ Expression_Variable <$> variableProd
+      , abstractionProd
+      , applicationProd
+      ]
 
-  pure expression
+  pure expressionProd
