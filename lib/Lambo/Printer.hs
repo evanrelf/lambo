@@ -40,11 +40,24 @@ instance Print [Token] where
 
 instance Print (Expression Text) where
   print = Fix.foldFix \case
-    Expression_Variable name -> name
-    Expression_Abstraction variable body ->
-      "λ" <> variable <> "." <> body
+    Expression_Variable name ->
+      name
+    Expression_Abstraction name body ->
+      "λ" <> name <> "." <> body
     Expression_Application function argument ->
       "(" <> function <> " " <> argument <> ")"
+
+
+instance Print (Expression Int) where
+  print = Fix.foldFix \case
+    Expression_Variable index ->
+      printIndex index
+    Expression_Abstraction index body ->
+      "λ" <> printIndex index <> "." <> body
+    Expression_Application function argument ->
+      "(" <> function <> " " <> argument <> ")"
+    where
+    printIndex index = Text.pack ("#" <> show index)
 
 
 newtype PrintShow a = PrintShow { unPrintShow :: a }
