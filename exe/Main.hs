@@ -6,39 +6,51 @@
 
 module Main (main) where
 
+import Data.Text (Text)
 import Lambo.Lexer (lex)
+import Lambo.Parser (parse)
 import Text.Read (readMaybe)
 import Prelude hiding (lex)
 
 import qualified Data.Char as Char
 import qualified Data.Text.IO as Text
 import qualified Options.Applicative as Options
+import qualified System.Exit as Exit
+import qualified System.IO as IO
 
 
 main :: IO ()
 main = do
-  Options{phase, file} <- getOptions
+  Options{file, phase} <- getOptions
+
+  source <-
+    if file == "-"
+      then Text.getContents
+      else Text.readFile file
+
+  let output :: Show a => Either Text a -> IO ()
+      output = \case
+        Left err -> do
+          Text.hPutStrLn IO.stderr err
+          Exit.exitFailure
+
+        Right ok ->
+          print ok
 
   case phase of
-    Lexer -> do
-      source <-
-        if file == "-"
-          then Text.getContents
-          else Text.readFile file
-
-      case lex source of
-        Left err -> Text.putStrLn err
-        Right tokens -> print tokens
+    Lexer -> output $ lex source
+    Parser -> output $ parse source
 
 
 data Options = Options
-  { phase :: Phase
-  , file :: FilePath
+  { file :: FilePath
+  , phase :: Phase
   }
 
 
 data Phase
   = Lexer
+  | Parser
   deriving stock (Show, Read, Enum, Bounded)
 
 
@@ -51,24 +63,24 @@ getOptions = do
 
 parseOptions :: Options.Parser Options
 parseOptions = do
-  phase <- Options.option phaseOption $ mconcat
-    [ Options.long "phase"
-    , Options.metavar "PHASE"
-    , Options.help $ unwords
-        [ "Which phase to stop processing"
-        , "(one of 'lexer'; default is 'lexer')"
-        ]
-    , Options.value maxBound
-    , Options.hidden
-    ]
-
   file <- Options.strArgument $ mconcat
     [ Options.metavar "FILE"
     , Options.help "Path to source file (defaults to stdin)"
     , Options.value "-"
     ]
 
-  pure Options{phase, file}
+  phase <- Options.option phaseOption $ mconcat
+    [ Options.long "phase"
+    , Options.metavar "PHASE"
+    , Options.help $ unwords
+        [ "Which phase to stop processing"
+        , "(one of 'lexer', 'parser'; default is 'parser')"
+        ]
+    , Options.value maxBound
+    , Options.hidden
+    ]
+
+  pure Options{file, phase}
   where
   phaseOption :: Options.ReadM Phase
   phaseOption =
