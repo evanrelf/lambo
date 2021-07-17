@@ -3,6 +3,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Main (main) where
 
@@ -10,6 +11,7 @@ import Data.Text (Text)
 import Text.Read (readMaybe)
 
 import qualified Data.Char as Char
+import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import qualified Lambo
 import qualified Options.Applicative as Options
@@ -26,18 +28,47 @@ main = do
       then Text.getContents
       else Text.readFile file
 
-  let output :: Lambo.Print a => Either Text a -> IO ()
-      output = \case
-        Left err -> do
-          Text.hPutStrLn IO.stderr err
-          Exit.exitFailure
-
-        Right ok ->
-          Text.putStrLn (Lambo.print ok)
+  Text.putStrLn "INPUT"
+  Text.putStrLn (Text.strip source)
+  Text.putStr "\n"
 
   case phase of
-    Lexer -> output $ Lambo.lex source
-    Parser -> output $ Lambo.parse source
+    Lexer -> do
+      Text.putStrLn "LEXING"
+      tokens <- unwrap $ Lambo.lex source
+      print tokens
+      Text.putStr "\n"
+
+      Text.putStrLn "PRINTING"
+      printIO tokens
+
+    Parser -> do
+      Text.putStrLn "LEXING"
+      tokens <- unwrap $ Lambo.lex source
+      print tokens
+      Text.putStr "\n"
+
+      Text.putStrLn "PARSING"
+      expression <- unwrap $ Lambo.parseTokens tokens
+      print expression
+      Text.putStr "\n"
+
+      Text.putStrLn "PRINTING"
+      printIO expression
+
+  where
+  unwrap :: Either Text a -> IO a
+  unwrap = \case
+    Left err -> do
+      Text.putStrLn "FAILED"
+      Text.hPutStrLn IO.stderr err
+      Exit.exitFailure
+
+    Right ok ->
+      pure ok
+
+  printIO :: Lambo.Print a => a -> IO ()
+  printIO = Text.putStrLn . Lambo.print
 
 
 data Options = Options
