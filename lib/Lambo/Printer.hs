@@ -38,7 +38,7 @@ instance Print [Token] where
   print = Text.unwords . fmap print
 
 
-instance Print Expression where
+instance Print (Expression Text) where
   print = Fix.foldFix \case
     Expression_Variable name -> name
     Expression_Abstraction variable body ->

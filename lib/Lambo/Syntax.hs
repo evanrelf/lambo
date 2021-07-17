@@ -8,17 +8,16 @@ module Lambo.Syntax
 where
 
 import Data.Fix (Fix)
-import Data.Text (Text)
 
 
-type Expression = Fix ExpressionF
+type Expression i = Fix (ExpressionF i)
 
 
 -- | @\\f. (\\x. f (x x)) (\\x. f (x x))@
-data ExpressionF a
-  = Expression_Variable Text
+data ExpressionF i a
+  = Expression_Variable i
     -- ^ @x@
-  | Expression_Abstraction Text a
+  | Expression_Abstraction i a
     -- ^ @\\ \<variable\> . \<expression\>@
   | Expression_Application a a
     -- ^ @( \<expression\> \<expression\> )@
