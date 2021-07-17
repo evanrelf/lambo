@@ -50,6 +50,7 @@ executable lambo
   build-depends:
     , lambo
     , optparse-applicative
+    , pretty-simple
     , text
 
 

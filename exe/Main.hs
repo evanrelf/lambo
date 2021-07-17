@@ -8,6 +8,7 @@
 module Main (main) where
 
 import Data.Text (Text)
+import Text.Pretty.Simple (pPrintNoColor)
 import Text.Read (readMaybe)
 
 import qualified Data.Char as Char
@@ -36,7 +37,7 @@ main = do
     Lexer -> do
       Text.putStrLn "LEXING"
       tokens <- unwrap $ Lambo.lex source
-      print tokens
+      pPrintNoColor tokens
       Text.putStr "\n"
 
       Text.putStrLn "PRINTING"
@@ -45,12 +46,13 @@ main = do
     Parser -> do
       Text.putStrLn "LEXING"
       tokens <- unwrap $ Lambo.lex source
-      print tokens
+      printIO tokens
+      pPrintNoColor tokens
       Text.putStr "\n"
 
       Text.putStrLn "PARSING"
       expression <- unwrap $ Lambo.parseTokens tokens
-      print expression
+      pPrintNoColor expression
       Text.putStr "\n"
 
       Text.putStrLn "PRINTING"
