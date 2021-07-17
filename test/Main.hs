@@ -25,7 +25,7 @@ main = Tasty.defaultMain $ Tasty.testGroup "lambo"
 
 test_lexer :: Tasty.TestTree
 test_lexer = Tasty.testGroup "Lexer" $ mconcat
-  [ successful
+  [ allEqual
       [ "\\x.x"
       , "λx.x"
       , "\\x->x"
@@ -42,7 +42,7 @@ test_lexer = Tasty.testGroup "Lexer" $ mconcat
       , Token_Variable "x"
       ]
 
-  , successful
+  , allEqual
       [ "\\x y-> x"
       , "\\x y -> x"
       , "\\x y ->x"
@@ -57,7 +57,7 @@ test_lexer = Tasty.testGroup "Lexer" $ mconcat
       , Token_Variable "x"
       ]
 
-  , successful
+  , allEqual
       ["\\foo bar. baz"]
       [ Token_Lambda
       , Token_Variable "foo"
@@ -66,7 +66,7 @@ test_lexer = Tasty.testGroup "Lexer" $ mconcat
       , Token_Variable "baz"
       ]
 
-  , successful
+  , allEqual
       ["\\f. (\\x. f (x x)) (\\x. f (x x))"]
       [ Token_Lambda
       , Token_Variable "f"
@@ -93,7 +93,7 @@ test_lexer = Tasty.testGroup "Lexer" $ mconcat
       , Token_CloseParen
       ]
 
-  , successful
+  , allEqual
       ["λf.λx.λy.((f y) x)"]
       [ Token_Lambda
       , Token_Variable "f"
@@ -114,29 +114,29 @@ test_lexer = Tasty.testGroup "Lexer" $ mconcat
       ]
   ]
   where
-  successful :: [Text] -> [Token] -> [Tasty.TestTree]
-  successful inputs output = inputs & fmap \input ->
+  allEqual :: [Text] -> [Token] -> [Tasty.TestTree]
+  allEqual inputs output = inputs & fmap \input ->
     HUnit.testCase (Text.unpack input) (lex input @=? Right output)
 
 test_parser :: Tasty.TestTree
 test_parser = Tasty.testGroup "Parser" $ mconcat
-  [ successful
+  [ allEqual
       ["x"]
       (Expression_Variable "x")
 
-  , successful
+  , allEqual
       ["(f x)"]
       (Expression_Application
         (Expression_Variable "f")
         (Expression_Variable "x"))
 
-  , successful
+  , allEqual
       ["λx.x"]
       (Expression_Abstraction
         "x"
         (Expression_Variable "x"))
 
-  , successful
+  , allEqual
       ["λf.λx.λy.((f y) x)"]
       (Expression_Abstraction
         "f"
@@ -151,6 +151,6 @@ test_parser = Tasty.testGroup "Parser" $ mconcat
               (Expression_Variable "x")))))
   ]
   where
-  successful :: [Text] -> Expression -> [Tasty.TestTree]
-  successful inputs output = inputs & fmap \input ->
+  allEqual :: [Text] -> Expression -> [Tasty.TestTree]
+  allEqual inputs output = inputs & fmap \input ->
     HUnit.testCase (Text.unpack input) (parse input @=? Right output)
