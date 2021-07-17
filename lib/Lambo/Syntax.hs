@@ -5,6 +5,7 @@ module Lambo.Syntax
   )
 where
 
+import Data.List.NonEmpty (NonEmpty)
 import Data.Text (Text)
 
 
@@ -12,7 +13,7 @@ import Data.Text (Text)
 data Expression
   = Expression_Variable Text
     -- ^ @x@
-  | Expression_Abstraction Text Expression
+  | Expression_Abstraction (NonEmpty Text) Expression
     -- ^ @\\ \<variable\> . \<expression\>@
   | Expression_Application Expression Expression
     -- ^ @( \<expression\> \<expression\> )@

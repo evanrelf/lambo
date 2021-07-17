@@ -1,4 +1,5 @@
 {-# LANGUAGE BlockArguments #-}
+{-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Main (main) where
@@ -131,22 +132,32 @@ test_parser = Tasty.testGroup "Parser" $ mconcat
   , successful
       ["λx.x"]
       (Expression_Abstraction
-        "x"
+        ["x"]
         (Expression_Variable "x"))
 
   , successful
       ["λf.λx.λy.((f y) x)"]
       (Expression_Abstraction
-        "f"
+        ["f"]
         (Expression_Abstraction
-          "x"
+          ["x"]
           (Expression_Abstraction
-            "y"
+            ["y"]
             (Expression_Application
               (Expression_Application
                 (Expression_Variable "f")
                 (Expression_Variable "y"))
               (Expression_Variable "x")))))
+
+  , successful
+      ["λf x y.((f y) x)"]
+      (Expression_Abstraction
+        ["f", "x", "y"]
+        (Expression_Application
+          (Expression_Application
+            (Expression_Variable "f")
+            (Expression_Variable "y"))
+          (Expression_Variable "x")))
   ]
   where
   successful :: [Text] -> Expression -> [Tasty.TestTree]
