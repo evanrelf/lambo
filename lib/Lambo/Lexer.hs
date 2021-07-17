@@ -94,5 +94,7 @@ parseSpace :: Parser ()
 parseSpace =
   Megaparsec.Lexer.space
     Megaparsec.space1
-    (Megaparsec.Lexer.skipLineComment "--")
+    (   Megaparsec.Lexer.skipLineComment "--"
+    <|> Megaparsec.Lexer.skipLineComment "#"
+    )
     empty
