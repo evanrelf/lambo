@@ -7,13 +7,11 @@
 module Main (main) where
 
 import Data.Text (Text)
-import Lambo.Lexer (lex)
-import Lambo.Parser (parse)
 import Text.Read (readMaybe)
-import Prelude hiding (lex)
 
 import qualified Data.Char as Char
 import qualified Data.Text.IO as Text
+import qualified Lambo
 import qualified Options.Applicative as Options
 import qualified System.Exit as Exit
 import qualified System.IO as IO
@@ -28,18 +26,18 @@ main = do
       then Text.getContents
       else Text.readFile file
 
-  let output :: Show a => Either Text a -> IO ()
+  let output :: Lambo.Print a => Either Text a -> IO ()
       output = \case
         Left err -> do
           Text.hPutStrLn IO.stderr err
           Exit.exitFailure
 
         Right ok ->
-          print ok
+          Text.putStrLn (Lambo.print ok)
 
   case phase of
-    Lexer -> output $ lex source
-    Parser -> output $ parse source
+    Lexer -> output $ Lambo.lex source
+    Parser -> output $ Lambo.parse source
 
 
 data Options = Options
