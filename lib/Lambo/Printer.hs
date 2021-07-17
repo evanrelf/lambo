@@ -1,10 +1,13 @@
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Lambo.Printer
   ( Print
   , print
+  , PrintShow (..)
   )
 where
 
@@ -40,3 +43,11 @@ instance Print Expression where
       "λ" <> variable <> "." <> print body
     Expression_Application function argument ->
       "(" <> print function <> " " <> print argument <> ")"
+
+
+newtype PrintShow a = PrintShow { unPrintShow :: a }
+  deriving newtype Print
+
+
+instance Print a => Show (PrintShow a) where
+  show = Text.unpack . print
