@@ -16,4 +16,4 @@ data Expression
     -- ^ @\\ \<variable\> . \<expression\>@
   | Expression_Application Expression Expression
     -- ^ @( \<expression\> \<expression\> )@
-  deriving stock Show
+  deriving stock (Show, Eq)
