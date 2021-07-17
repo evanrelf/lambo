@@ -33,6 +33,8 @@ test_lexer = Tasty.testGroup "Lexer" $ mconcat
       , "λ x . x"
       , "\\ x -> x"
       , "  \\x.x  "
+      , "-- foo\nλx.x"
+      , "# foo\nλx.x"
       ]
       [ Token_Lambda
       , Token_Variable "x"
