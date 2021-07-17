@@ -1,3 +1,5 @@
+{-# LANGUAGE DerivingStrategies #-}
+
 module Lambo.Syntax
   ( Expression (..)
   )
@@ -11,6 +13,7 @@ data Expression
   = Expression_Variable Text
     -- ^ @x@
   | Expression_Abstraction Text Expression
-    -- ^ @\<variable\> . \<expression\>@
+    -- ^ @\\ \<variable\> . \<expression\>@
   | Expression_Application Expression Expression
     -- ^ @( \<expression\> \<expression\> )@
+  deriving stock Show
