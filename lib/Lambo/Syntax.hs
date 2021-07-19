@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Lambo.Syntax
   ( Expression
@@ -8,6 +9,7 @@ module Lambo.Syntax
 where
 
 import Data.Fix (Fix)
+import Text.Show.Deriving (deriveShow1)
 
 
 type Expression i = Fix (ExpressionF i)
@@ -22,3 +24,5 @@ data ExpressionF i a
   | Expression_Application a a
     -- ^ @( \<expression\> \<expression\> )@
   deriving stock (Show, Eq, Functor)
+
+deriveShow1 ''ExpressionF
