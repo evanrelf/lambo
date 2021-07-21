@@ -2,13 +2,16 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module Lambo.Syntax
-  ( ExpressionF (..)
+  ( ExpressionF
+      ( ..
+      , Expression_Variable
+      , Expression_Abstraction
+      , Expression_Application
+      )
   , Expression
-  , pattern Expression_Variable
-  , pattern Expression_Abstraction
-  , pattern Expression_Application
   )
 where
 
@@ -34,19 +37,19 @@ deriveEq1 ''ExpressionF
 type Expression i = Fix (ExpressionF i)
 
 
-pattern Expression_Variable :: i -> Expression i
+pattern Expression_Variable :: e ~ Expression i => i -> e
 pattern Expression_Variable i =
   Fix (ExpressionF_Variable i)
 
 
-pattern Expression_Abstraction :: i -> Expression i -> Expression i
+pattern Expression_Abstraction :: e ~ Expression i => i -> e -> e
 pattern Expression_Abstraction argument definition =
   Fix (ExpressionF_Abstraction argument definition)
 
 
-pattern Expression_Application :: Expression i -> Expression i -> Expression i
+pattern Expression_Application :: e ~ Expression i => e -> e -> e
 pattern Expression_Application function argument =
   Fix (ExpressionF_Application function argument)
 
 
-{-# COMPLETE Expression_Variable, Expression_Abstraction, Expression_Application #-}
+{-# COMPLETE Expression_Variable, Expression_Abstraction, Expression_Application :: Expression #-}

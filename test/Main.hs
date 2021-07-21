@@ -8,12 +8,7 @@ import Data.Function ((&))
 import Data.Text (Text)
 import Lambo.Lexer (Token (..), lex)
 import Lambo.Parser (parse)
-import Lambo.Syntax
-  ( Expression
-  , pattern Expression_Variable
-  , pattern Expression_Abstraction
-  , pattern Expression_Application
-  )
+import Lambo.Syntax (Expression, ExpressionF (..))
 import Test.Tasty.HUnit ((@=?))
 import Prelude hiding (lex)
 
