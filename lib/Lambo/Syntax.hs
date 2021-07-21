@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE PatternSynonyms #-}
@@ -15,6 +16,7 @@ module Lambo.Syntax
   )
 where
 
+import Data.Data (Data)
 import Data.Eq.Deriving (deriveEq1)
 import Data.Fix (Fix (..))
 import Text.Show.Deriving (deriveShow1)
@@ -28,7 +30,7 @@ data ExpressionF i a
     -- ^ @\\ \<variable\> . \<expression\>@
   | ExpressionF_Application a a
     -- ^ @( \<expression\> \<expression\> )@
-  deriving stock (Show, Eq, Functor)
+  deriving stock (Show, Eq, Functor, Data)
 
 deriveShow1 ''ExpressionF
 deriveEq1 ''ExpressionF

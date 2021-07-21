@@ -6,4 +6,5 @@ where
 import Lambo.Lexer as X
 import Lambo.Parser as X
 import Lambo.Printer as X
+import Lambo.QuasiQuoter as X
 import Lambo.Syntax as X

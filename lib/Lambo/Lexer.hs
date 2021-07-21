@@ -1,4 +1,5 @@
 {-# LANGUAGE BlockArguments #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings #-}
 
@@ -9,6 +10,7 @@ module Lambo.Lexer
 where
 
 import Control.Applicative (empty, (<|>))
+import Data.Data (Data)
 import Data.Foldable (asum)
 import Data.Text (Text)
 import Data.Void (Void)
@@ -32,7 +34,7 @@ data Token
     -- ^ @(@
   | Token_CloseParen
     -- ^ @)@
-  deriving stock (Show, Eq)
+  deriving stock (Show, Eq, Data)
 
 
 type Parser = Megaparsec.Parsec Void Text
