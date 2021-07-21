@@ -66,6 +66,7 @@ test-suite test
   main-is: Main.hs
   hs-source-dirs: test
   build-depends:
+    , data-fix
     , lambo
     , tasty
     , tasty-hunit

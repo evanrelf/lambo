@@ -3,11 +3,12 @@
 
 module Main (main) where
 
+import Data.Fix (Fix (..))
 import Data.Function ((&))
 import Data.Text (Text)
 import Lambo.Lexer (Token (..), lex)
 import Lambo.Parser (parse)
-import Lambo.Syntax (Expression (..))
+import Lambo.Syntax (Expression, ExpressionF (..))
 import Test.Tasty.HUnit ((@=?))
 import Prelude hiding (lex)
 
@@ -122,35 +123,35 @@ test_parser :: Tasty.TestTree
 test_parser = Tasty.testGroup "Parser" $ mconcat
   [ allEqual
       ["x"]
-      (Expression_Variable "x")
+      (Fix $ Expression_Variable "x")
 
   , allEqual
       ["(f x)"]
-      (Expression_Application
-        (Expression_Variable "f")
-        (Expression_Variable "x"))
+      (Fix $ Expression_Application
+        (Fix $ Expression_Variable "f")
+        (Fix $ Expression_Variable "x"))
 
   , allEqual
       ["λx.x"]
-      (Expression_Abstraction
+      (Fix $ Expression_Abstraction
         "x"
-        (Expression_Variable "x"))
+        (Fix $ Expression_Variable "x"))
 
   , allEqual
       ["λf.λx.λy.((f y) x)"]
-      (Expression_Abstraction
+      (Fix $ Expression_Abstraction
         "f"
-        (Expression_Abstraction
+        (Fix $ Expression_Abstraction
           "x"
-          (Expression_Abstraction
+          (Fix $ Expression_Abstraction
             "y"
-            (Expression_Application
-              (Expression_Application
-                (Expression_Variable "f")
-                (Expression_Variable "y"))
-              (Expression_Variable "x")))))
+            (Fix $ Expression_Application
+              (Fix $ Expression_Application
+                (Fix $ Expression_Variable "f")
+                (Fix $ Expression_Variable "y"))
+              (Fix $ Expression_Variable "x")))))
   ]
   where
-  allEqual :: [Text] -> Expression -> [Tasty.TestTree]
+  allEqual :: [Text] -> Expression Text -> [Tasty.TestTree]
   allEqual inputs output = inputs & fmap \input ->
     HUnit.testCase (Text.unpack input) (parse input @=? Right output)

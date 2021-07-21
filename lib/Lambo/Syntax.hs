@@ -8,6 +8,7 @@ module Lambo.Syntax
   )
 where
 
+import Data.Eq.Deriving (deriveEq1)
 import Data.Fix (Fix)
 import Text.Show.Deriving (deriveShow1)
 
@@ -26,3 +27,4 @@ data ExpressionF i a
   deriving stock (Show, Eq, Functor)
 
 deriveShow1 ''ExpressionF
+deriveEq1 ''ExpressionF
