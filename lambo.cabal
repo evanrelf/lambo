@@ -34,12 +34,14 @@ library
     , data-fix
     , deriving-compat
     , megaparsec
+    , template-haskell
     , text
   exposed-modules:
     Lambo
     Lambo.Lexer
     Lambo.Parser
     Lambo.Printer
+    Lambo.QuasiQuoter
     Lambo.Syntax
 
 
