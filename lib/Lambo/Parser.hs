@@ -52,20 +52,20 @@ grammar = mdo
     variable <- variableProd
     _ <- Earley.token Token_Dot
     expression <- expressionProd
-    pure (Expression_Abstraction variable expression)
+    pure (ExpressionF_Abstraction variable expression)
 
   applicationProd <- rule "application" do
     _ <- Earley.token Token_OpenParen
     function <- expressionProd
     argument <- expressionProd
     _ <- Earley.token Token_CloseParen
-    pure (Expression_Application function argument)
+    pure (ExpressionF_Application function argument)
 
   expressionProd <- rule "expression" do
-    asum
-      [ Fix <$> Expression_Variable <$> variableProd
-      , Fix <$> abstractionProd
-      , Fix <$> applicationProd
+    Fix <$> asum
+      [ ExpressionF_Variable <$> variableProd
+      , abstractionProd
+      , applicationProd
       ]
 
   pure expressionProd
