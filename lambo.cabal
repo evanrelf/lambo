@@ -34,7 +34,6 @@ library
     , data-fix
     , deriving-compat
     , megaparsec
-    , syb
     , template-haskell
     , text
     , transformers
