@@ -1,5 +1,7 @@
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -30,7 +32,7 @@ data ExpressionF i a
     -- ^ @λ \<variable\> . \<expression\>@
   | ExpressionF_Application a a
     -- ^ @( \<expression\> \<expression\> )@
-  deriving stock (Show, Eq, Functor, Data)
+  deriving stock (Show, Eq, Functor, Foldable, Traversable, Data)
 
 deriveShow1 ''ExpressionF
 deriveEq1 ''ExpressionF

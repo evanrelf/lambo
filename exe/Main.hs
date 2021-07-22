@@ -51,12 +51,15 @@ main = do
       Text.putStr "\n"
 
       Text.putStrLn "PARSING"
-      expression <- unwrap $ Lambo.parseTokens tokens
-      pPrintNoColor expression
+      namedExpression <- unwrap $ Lambo.parseTokens tokens
+      pPrintNoColor namedExpression
+      printIO namedExpression
       Text.putStr "\n"
 
-      Text.putStrLn "PRINTING"
-      printIO expression
+      Text.putStrLn "INDEXING"
+      indexedExpression <- unwrap $ Lambo.index namedExpression
+      pPrintNoColor indexedExpression
+      printIO indexedExpression
 
   where
   unwrap :: Either Text a -> IO a

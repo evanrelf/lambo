@@ -34,10 +34,13 @@ library
     , data-fix
     , deriving-compat
     , megaparsec
+    , syb
     , template-haskell
     , text
+    , transformers
   exposed-modules:
     Lambo
+    Lambo.Index
     Lambo.Lexer
     Lambo.Parser
     Lambo.Printer
