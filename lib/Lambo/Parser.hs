@@ -43,7 +43,7 @@ grammar = mdo
 
   variableProd <- rule "variable" do
     Earley.terminal \case
-      Token_Variable name -> Just name
+      Token_Identifier name -> Just name
       _ -> Nothing
 
   abstractionProd <- rule "abstraction" do

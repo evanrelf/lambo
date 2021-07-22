@@ -28,7 +28,7 @@ data Token
     -- ^ @λ@
   | Token_Dot
     -- ^ @.@
-  | Token_Variable Text
+  | Token_Identifier Text
     -- ^ @x@
   | Token_At
     -- ^ @\@@
@@ -63,8 +63,8 @@ parseToken = asum
       <$ (parseSymbol "λ" <|> parseSymbol "\\")
   , Token_Dot
       <$ (parseSymbol "." <|> parseSymbol "->")
-  , Token_Variable
-      <$> parseVariable
+  , Token_Identifier
+      <$> parseIdentifier
   , Token_At
       <$ parseSymbol "@"
   , Token_Number
@@ -76,8 +76,8 @@ parseToken = asum
   ]
 
 
-parseVariable :: Parser Text
-parseVariable = parseLexeme do
+parseIdentifier :: Parser Text
+parseIdentifier = parseLexeme do
   c <- Megaparsec.satisfy \char -> any ($ char)
     [ Char.isAsciiLower
     , (==) '_'

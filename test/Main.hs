@@ -38,9 +38,9 @@ test_lexer = Tasty.testGroup "Lexer" $ mconcat
       , "# foo\nλx.x"
       ]
       [ Token_Lambda
-      , Token_Variable "x"
+      , Token_Identifier "x"
       , Token_Dot
-      , Token_Variable "x"
+      , Token_Identifier "x"
       ]
 
   , allEqual
@@ -52,44 +52,44 @@ test_lexer = Tasty.testGroup "Lexer" $ mconcat
       , "λx y .x"
       ]
       [ Token_Lambda
-      , Token_Variable "x"
-      , Token_Variable "y"
+      , Token_Identifier "x"
+      , Token_Identifier "y"
       , Token_Dot
-      , Token_Variable "x"
+      , Token_Identifier "x"
       ]
 
   , allEqual
       ["\\foo bar. baz"]
       [ Token_Lambda
-      , Token_Variable "foo"
-      , Token_Variable "bar"
+      , Token_Identifier "foo"
+      , Token_Identifier "bar"
       , Token_Dot
-      , Token_Variable "baz"
+      , Token_Identifier "baz"
       ]
 
   , allEqual
       ["\\f. (\\x. f (x x)) (\\x. f (x x))"]
       [ Token_Lambda
-      , Token_Variable "f"
+      , Token_Identifier "f"
       , Token_Dot
       , Token_OpenParen
       , Token_Lambda
-      , Token_Variable "x"
+      , Token_Identifier "x"
       , Token_Dot
-      , Token_Variable "f"
+      , Token_Identifier "f"
       , Token_OpenParen
-      , Token_Variable "x"
-      , Token_Variable "x"
+      , Token_Identifier "x"
+      , Token_Identifier "x"
       , Token_CloseParen
       , Token_CloseParen
       , Token_OpenParen
       , Token_Lambda
-      , Token_Variable "x"
+      , Token_Identifier "x"
       , Token_Dot
-      , Token_Variable "f"
+      , Token_Identifier "f"
       , Token_OpenParen
-      , Token_Variable "x"
-      , Token_Variable "x"
+      , Token_Identifier "x"
+      , Token_Identifier "x"
       , Token_CloseParen
       , Token_CloseParen
       ]
@@ -97,20 +97,20 @@ test_lexer = Tasty.testGroup "Lexer" $ mconcat
   , allEqual
       ["λf.λx.λy.((f y) x)"]
       [ Token_Lambda
-      , Token_Variable "f"
+      , Token_Identifier "f"
       , Token_Dot
       , Token_Lambda
-      , Token_Variable "x"
+      , Token_Identifier "x"
       , Token_Dot
       , Token_Lambda
-      , Token_Variable "y"
+      , Token_Identifier "y"
       , Token_Dot
       , Token_OpenParen
       , Token_OpenParen
-      , Token_Variable "f"
-      , Token_Variable "y"
+      , Token_Identifier "f"
+      , Token_Identifier "y"
       , Token_CloseParen
-      , Token_Variable "x"
+      , Token_Identifier "x"
       , Token_CloseParen
       ]
   ]

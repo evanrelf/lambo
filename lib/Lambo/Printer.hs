@@ -29,7 +29,7 @@ instance Print Token where
   print = \case
     Token_Lambda -> "λ"
     Token_Dot -> "."
-    Token_Variable name -> name
+    Token_Identifier name -> name
     Token_At -> "@"
     Token_Number number -> Text.pack (show number)
     Token_OpenParen -> "("
