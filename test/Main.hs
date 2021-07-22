@@ -133,10 +133,20 @@ test_parser = Tasty.testGroup "Parser" $ mconcat
         (Expression_Variable "x" 0))
 
   , allEqual
-      ["λx.x"]
+      [ "λx.x"
+      , "λx.x@0"
+      ]
       (Expression_Abstraction
         "x"
         (Expression_Variable "x" 0))
+
+  , allEqual
+      [ "λx.x@42"
+      , "λx . x@42"
+      ]
+      (Expression_Abstraction
+        "x"
+        (Expression_Variable "x" 42))
 
   , allEqual
       ["λf.λx.λy.((f y) x)"]
