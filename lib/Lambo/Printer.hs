@@ -40,8 +40,10 @@ instance Print [Token] where
 
 instance Print Expression where
   print = Fix.foldFix \case
-    ExpressionF_Variable name _index ->
+    ExpressionF_Variable name 0 ->
       name
+    ExpressionF_Variable name index ->
+      name <> "#" <> Text.pack (show index)
     ExpressionF_Abstraction argument definition ->
       "λ" <> argument <> "." <> definition
     ExpressionF_Application function argument ->
