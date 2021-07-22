@@ -30,6 +30,10 @@ data Token
     -- ^ @.@
   | Token_Variable Text
     -- ^ @x@
+  | Token_At
+    -- ^ @\@@
+  | Token_Number Int
+    -- ^ @42@
   | Token_OpenParen
     -- ^ @(@
   | Token_CloseParen
@@ -61,6 +65,10 @@ parseToken = asum
       <$ (parseSymbol "." <|> parseSymbol "->")
   , Token_Variable
       <$> parseVariable
+  , Token_At
+      <$ parseSymbol "@"
+  , Token_Number
+      <$> read <$> Megaparsec.some Megaparsec.digitChar
   , Token_OpenParen
       <$ parseSymbol "("
   , Token_CloseParen

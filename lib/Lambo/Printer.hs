@@ -30,6 +30,8 @@ instance Print Token where
     Token_Lambda -> "λ"
     Token_Dot -> "."
     Token_Variable name -> name
+    Token_At -> "@"
+    Token_Number number -> Text.pack (show number)
     Token_OpenParen -> "("
     Token_CloseParen -> ")"
 
@@ -43,7 +45,7 @@ instance Print Expression where
     ExpressionF_Variable name 0 ->
       name
     ExpressionF_Variable name index ->
-      name <> "#" <> Text.pack (show index)
+      name <> "@" <> Text.pack (show index)
     ExpressionF_Abstraction argument definition ->
       "λ" <> argument <> "." <> definition
     ExpressionF_Application function argument ->
