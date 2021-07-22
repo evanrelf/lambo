@@ -62,7 +62,7 @@ grammar = mdo
 
   expressionProd <- rule "expression" do
     Fix <$> asum
-      [ ExpressionF_Variable <$> variableProd
+      [ ExpressionF_Variable <$> variableProd <*> pure 0
       , abstractionProd
       , applicationProd
       ]

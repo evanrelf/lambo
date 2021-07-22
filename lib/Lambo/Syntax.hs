@@ -27,7 +27,7 @@ import Text.Show.Deriving (deriveShow1)
 
 -- | @λf. (λx. f (x x)) (λx. f (x x))@
 data ExpressionF a
-  = ExpressionF_Variable Text
+  = ExpressionF_Variable Text Int
     -- ^ @x@
   | ExpressionF_Abstraction Text a
     -- ^ @λ \<variable\> . \<expression\>@
@@ -42,9 +42,9 @@ deriveEq1 ''ExpressionF
 type Expression = Fix ExpressionF
 
 
-pattern Expression_Variable :: e ~ Expression => Text -> e
-pattern Expression_Variable name =
-  Fix (ExpressionF_Variable name)
+pattern Expression_Variable :: e ~ Expression => Text -> Int -> e
+pattern Expression_Variable name index =
+  Fix (ExpressionF_Variable name index)
 
 
 pattern Expression_Abstraction :: e ~ Expression => Text -> e -> e

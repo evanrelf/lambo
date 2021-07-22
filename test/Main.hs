@@ -124,19 +124,19 @@ test_parser :: Tasty.TestTree
 test_parser = Tasty.testGroup "Parser" $ mconcat
   [ allEqual
       ["x"]
-      (Expression_Variable "x")
+      (Expression_Variable "x" 0)
 
   , allEqual
       ["(f x)"]
       (Expression_Application
-        (Expression_Variable "f")
-        (Expression_Variable "x"))
+        (Expression_Variable "f" 0)
+        (Expression_Variable "x" 0))
 
   , allEqual
       ["λx.x"]
       (Expression_Abstraction
         "x"
-        (Expression_Variable "x"))
+        (Expression_Variable "x" 0))
 
   , allEqual
       ["λf.λx.λy.((f y) x)"]
@@ -148,9 +148,9 @@ test_parser = Tasty.testGroup "Parser" $ mconcat
             "y"
             (Expression_Application
               (Expression_Application
-                (Expression_Variable "f")
-                (Expression_Variable "y"))
-              (Expression_Variable "x")))))
+                (Expression_Variable "f" 0)
+                (Expression_Variable "y" 0))
+              (Expression_Variable "x" 0)))))
   ]
   where
   allEqual :: [Text] -> Expression -> [Tasty.TestTree]
