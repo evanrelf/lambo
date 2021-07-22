@@ -21,14 +21,15 @@ where
 import Data.Data (Data)
 import Data.Eq.Deriving (deriveEq1)
 import Data.Fix (Fix (..))
+import Data.Text (Text)
 import Text.Show.Deriving (deriveShow1)
 
 
 -- | @λf. (λx. f (x x)) (λx. f (x x))@
-data ExpressionF i a
-  = ExpressionF_Variable i
+data ExpressionF a
+  = ExpressionF_Variable Text
     -- ^ @x@
-  | ExpressionF_Abstraction i a
+  | ExpressionF_Abstraction Text a
     -- ^ @λ \<variable\> . \<expression\>@
   | ExpressionF_Application a a
     -- ^ @( \<expression\> \<expression\> )@
@@ -38,20 +39,20 @@ deriveShow1 ''ExpressionF
 deriveEq1 ''ExpressionF
 
 
-type Expression i = Fix (ExpressionF i)
+type Expression = Fix ExpressionF
 
 
-pattern Expression_Variable :: e ~ Expression i => i -> e
-pattern Expression_Variable i =
-  Fix (ExpressionF_Variable i)
+pattern Expression_Variable :: e ~ Expression => Text -> e
+pattern Expression_Variable name =
+  Fix (ExpressionF_Variable name)
 
 
-pattern Expression_Abstraction :: e ~ Expression i => i -> e -> e
+pattern Expression_Abstraction :: e ~ Expression => Text -> e -> e
 pattern Expression_Abstraction argument definition =
   Fix (ExpressionF_Abstraction argument definition)
 
 
-pattern Expression_Application :: e ~ Expression i => e -> e -> e
+pattern Expression_Application :: e ~ Expression => e -> e -> e
 pattern Expression_Application function argument =
   Fix (ExpressionF_Application function argument)
 

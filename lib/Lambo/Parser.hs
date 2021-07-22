@@ -23,11 +23,11 @@ import qualified Data.Text as Text
 import qualified Text.Earley as Earley
 
 
-parse :: Text -> Either Text (Expression Text)
+parse :: Text -> Either Text Expression
 parse = lex >=> parseTokens
 
 
-parseTokens :: [Token] -> Either Text (Expression Text)
+parseTokens :: [Token] -> Either Text Expression
 parseTokens tokens =
   case Earley.fullParses (Earley.parser grammar) tokens of
     ([], report) ->
@@ -37,7 +37,7 @@ parseTokens tokens =
       Right result
 
 
-grammar :: Earley.Grammar r (Earley.Prod r Text Token (Expression Text))
+grammar :: Earley.Grammar r (Earley.Prod r Text Token Expression)
 grammar = mdo
   let rule name prod = Earley.rule (prod <?> name)
 

@@ -39,7 +39,6 @@ library
     , transformers
   exposed-modules:
     Lambo
-    Lambo.Index
     Lambo.Lexer
     Lambo.Parser
     Lambo.Printer

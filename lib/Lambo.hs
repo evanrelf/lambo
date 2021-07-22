@@ -3,7 +3,6 @@ module Lambo
   )
 where
 
-import Lambo.Index as X
 import Lambo.Lexer as X
 import Lambo.Parser as X
 import Lambo.Printer as X

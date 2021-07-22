@@ -38,7 +38,7 @@ instance Print [Token] where
   print = Text.unwords . fmap print
 
 
-instance Print (Expression Text) where
+instance Print Expression where
   print = Fix.foldFix \case
     ExpressionF_Variable name ->
       name
@@ -46,18 +46,6 @@ instance Print (Expression Text) where
       "λ" <> argument <> "." <> definition
     ExpressionF_Application function argument ->
       "(" <> function <> " " <> argument <> ")"
-
-
-instance Print (Expression Int) where
-  print = Fix.foldFix \case
-    ExpressionF_Variable index ->
-      printIndex index
-    ExpressionF_Abstraction _argument definition ->
-      "λ " <> definition
-    ExpressionF_Application function argument ->
-      "(" <> function <> " " <> argument <> ")"
-    where
-    printIndex index = Text.pack ("#" <> show index)
 
 
 newtype PrintShow a = PrintShow { unPrintShow :: a }
