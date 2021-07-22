@@ -10,14 +10,13 @@ module Lambo.Parser
   )
 where
 
-import Text.Earley ((<?>))
-
 import Control.Monad ((>=>))
 import Data.Fix (Fix (..))
 import Data.Foldable (asum)
 import Data.Text (Text)
 import Lambo.Lexer (Token (..), lex)
 import Lambo.Syntax (Expression, ExpressionF (..))
+import Text.Earley ((<?>))
 import Prelude hiding (lex)
 
 import qualified Data.Text as Text

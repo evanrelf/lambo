@@ -25,7 +25,7 @@ import qualified Text.Megaparsec.Char.Lexer as Megaparsec.Lexer
 
 data Token
   = Token_Lambda
-    -- ^ @\\@
+    -- ^ @λ@
   | Token_Dot
     -- ^ @.@
   | Token_Variable Text
@@ -96,7 +96,7 @@ parseSpace :: Parser ()
 parseSpace =
   Megaparsec.Lexer.space
     Megaparsec.space1
-    (   Megaparsec.Lexer.skipLineComment "--"
-    <|> Megaparsec.Lexer.skipLineComment "#"
+    (   Megaparsec.Lexer.skipLineComment "#"
+    <|> Megaparsec.Lexer.skipLineComment "--"
     )
     empty

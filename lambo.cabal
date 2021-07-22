@@ -41,7 +41,7 @@ library
     Lambo.Lexer
     Lambo.Parser
     Lambo.Printer
-    Lambo.QuasiQuoter
+    Lambo.QuasiQuoters
     Lambo.Syntax
 
 

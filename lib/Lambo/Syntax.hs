@@ -22,12 +22,12 @@ import Data.Fix (Fix (..))
 import Text.Show.Deriving (deriveShow1)
 
 
--- | @\\f. (\\x. f (x x)) (\\x. f (x x))@
+-- | @λf. (λx. f (x x)) (λx. f (x x))@
 data ExpressionF i a
   = ExpressionF_Variable i
     -- ^ @x@
   | ExpressionF_Abstraction i a
-    -- ^ @\\ \<variable\> . \<expression\>@
+    -- ^ @λ \<variable\> . \<expression\>@
   | ExpressionF_Application a a
     -- ^ @( \<expression\> \<expression\> )@
   deriving stock (Show, Eq, Functor, Data)

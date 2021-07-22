@@ -42,8 +42,8 @@ instance Print (Expression Text) where
   print = Fix.foldFix \case
     ExpressionF_Variable name ->
       name
-    ExpressionF_Abstraction name body ->
-      "λ" <> name <> "." <> body
+    ExpressionF_Abstraction argument definition ->
+      "λ" <> argument <> "." <> definition
     ExpressionF_Application function argument ->
       "(" <> function <> " " <> argument <> ")"
 
@@ -52,8 +52,8 @@ instance Print (Expression Int) where
   print = Fix.foldFix \case
     ExpressionF_Variable index ->
       printIndex index
-    ExpressionF_Abstraction index body ->
-      "λ" <> printIndex index <> "." <> body
+    ExpressionF_Abstraction argument definition ->
+      "λ" <> printIndex argument <> "." <> definition
     ExpressionF_Application function argument ->
       "(" <> function <> " " <> argument <> ")"
     where
