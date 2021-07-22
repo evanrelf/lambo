@@ -6,6 +6,7 @@ module Main (main) where
 
 import Data.Function ((&))
 import Data.Text (Text)
+import Lambo.Index (index)
 import Lambo.Lexer (Token (..), lex)
 import Lambo.Parser (parse)
 import Lambo.Syntax (Expression, ExpressionF (..))
@@ -21,6 +22,7 @@ main :: IO ()
 main = Tasty.defaultMain $ Tasty.testGroup "lambo"
   [ test_lexer
   , test_parser
+  , test_index
   ]
 
 
@@ -119,6 +121,7 @@ test_lexer = Tasty.testGroup "Lexer" $ mconcat
   allEqual inputs output = inputs & fmap \input ->
     HUnit.testCase (Text.unpack input) (lex input @=? Right output)
 
+
 test_parser :: Tasty.TestTree
 test_parser = Tasty.testGroup "Parser" $ mconcat
   [ allEqual
@@ -155,3 +158,27 @@ test_parser = Tasty.testGroup "Parser" $ mconcat
   allEqual :: [Text] -> Expression Text -> [Tasty.TestTree]
   allEqual inputs output = inputs & fmap \input ->
     HUnit.testCase (Text.unpack input) (parse input @=? Right output)
+
+
+test_index :: Tasty.TestTree
+test_index = Tasty.testGroup "Index"
+  [ equals
+      "λx.x"
+      (Expression_Abstraction
+        1
+        (Expression_Variable 1))
+
+  , equals
+      "λx.λy.x"
+      (Expression_Abstraction
+        1
+        (Expression_Abstraction
+          1
+          (Expression_Variable 2)))
+  ]
+  where
+  equals :: Text -> Expression Int -> Tasty.TestTree
+  equals input output =
+    HUnit.testCase
+      (Text.unpack input)
+      ((parse input >>= index) @=? Right output)
