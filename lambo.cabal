@@ -34,6 +34,7 @@ library
     , data-fix
     , deriving-compat
     , megaparsec
+    , repline
     , template-haskell
     , text
     , transformers
@@ -43,6 +44,7 @@ library
     Lambo.Parser
     Lambo.Printer
     Lambo.QuasiQuoters
+    Lambo.Repl
     Lambo.Syntax
 
 
