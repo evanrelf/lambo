@@ -9,7 +9,7 @@ import Data.Text (Text)
 import Lambo.Lexer (Token (..), lex)
 import Lambo.Parser (parse)
 import Lambo.Syntax (Expression, ExpressionF (..))
-import Test.Tasty.HUnit ((@=?))
+import Test.Tasty.HUnit ((@?=))
 import Prelude hiding (lex)
 
 import qualified Data.Text as Text
@@ -117,7 +117,7 @@ test_lexer = Tasty.testGroup "Lexer" $ mconcat
   where
   allEqual :: [Text] -> [Token] -> [Tasty.TestTree]
   allEqual inputs output = inputs & fmap \input ->
-    HUnit.testCase (Text.unpack input) (lex input @=? Right output)
+    HUnit.testCase (Text.unpack input) (lex input @?= Right output)
 
 
 test_parser :: Tasty.TestTree
@@ -155,4 +155,4 @@ test_parser = Tasty.testGroup "Parser" $ mconcat
   where
   allEqual :: [Text] -> Expression -> [Tasty.TestTree]
   allEqual inputs output = inputs & fmap \input ->
-    HUnit.testCase (Text.unpack input) (parse input @=? Right output)
+    HUnit.testCase (Text.unpack input) (parse input @?= Right output)
