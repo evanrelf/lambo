@@ -39,6 +39,7 @@ library
     , transformers
   exposed-modules:
     Lambo
+    Lambo.Evaluator
     Lambo.Expression
     Lambo.Lexer
     Lambo.Parser
