@@ -137,6 +137,10 @@ test_parser = Tasty.testGroup "Parser" $ mconcat
   , allEqual
       [ "λx.x"
       , "λx.x@0"
+      , "(λx.x)"
+      , "((λx.x))"
+      , "((λx.(x)))"
+      , "((λx.((x))))"
       ]
       (Expression_Abstraction
         "x"
