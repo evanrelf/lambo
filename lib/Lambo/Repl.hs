@@ -7,7 +7,9 @@ module Lambo.Repl
 where
 
 import Control.Monad.IO.Class (MonadIO (..))
+import Data.Functor ((<&>))
 import Data.Text (Text)
+import Lambo.Evaluator (evaluate)
 import Lambo.Lexer (lex)
 import Lambo.Parser (parse)
 import Lambo.Printer (print)
@@ -24,10 +26,11 @@ import qualified System.IO as IO
 repl :: MonadIO m => m ()
 repl = liftIO $ Repline.evalReplOpts ReplOpts
   { banner = \_ -> pure "lambo> "
-  , command = \_ -> liftIO $ putStrLn "unimplemented"
+  , command = evalCommand
   , options =
       [ ("lex", lexCommand)
       , ("parse", parseCommand)
+      , ("eval", evalCommand)
       ]
   , prefix = Just ':'
   , multilineCommand = Nothing
@@ -49,6 +52,12 @@ parseCommand string = liftIO do
   parse (Text.pack string) `dischargeError` \expression -> do
     Text.putStrLn (print expression)
     pPrintNoColor expression
+
+
+evalCommand :: MonadIO m => String -> m ()
+evalCommand string = liftIO do
+  (parse (Text.pack string) <&> evaluate) `dischargeError` \expression -> do
+    Text.putStrLn (print expression)
 
 
 dischargeError :: MonadIO m => Either Text a -> (a -> m ()) -> m ()
