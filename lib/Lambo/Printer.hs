@@ -14,10 +14,9 @@ where
 
 import Data.Text (Text)
 import Lambo.Lexer (Token (..))
-import Lambo.Syntax (Expression, ExpressionF (..))
+import Lambo.Syntax (Expression (..))
 import Prelude hiding (print)
 
-import qualified Data.Fix as Fix
 import qualified Data.Text as Text
 
 
@@ -41,15 +40,15 @@ instance Print [Token] where
 
 
 instance Print Expression where
-  print = Fix.foldFix \case
-    ExpressionF_Variable name 0 ->
+  print = \case
+    Expression_Variable name 0 ->
       name
-    ExpressionF_Variable name index ->
+    Expression_Variable name index ->
       name <> "@" <> Text.pack (show index)
-    ExpressionF_Abstraction argument definition ->
-      "λ" <> argument <> "." <> definition
-    ExpressionF_Application function argument ->
-      "(" <> function <> " " <> argument <> ")"
+    Expression_Abstraction argument definition ->
+      "(λ" <> argument <> "." <> print definition <> ")"
+    Expression_Application function argument ->
+      "(" <> print function <> " " <> print argument <> ")"
 
 
 newtype PrintShow a = PrintShow { unPrintShow :: a }

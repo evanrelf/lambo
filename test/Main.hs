@@ -1,6 +1,5 @@
 {-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PatternSynonyms #-}
 
 module Main (main) where
 
@@ -8,7 +7,7 @@ import Data.Function ((&))
 import Data.Text (Text)
 import Lambo.Lexer (Token (..), lex)
 import Lambo.Parser (parse)
-import Lambo.Syntax (Expression, ExpressionF (..))
+import Lambo.Syntax (Expression (..))
 import Test.Tasty.HUnit ((@?=))
 import Prelude hiding (lex)
 
