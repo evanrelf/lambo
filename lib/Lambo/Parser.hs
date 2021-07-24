@@ -10,10 +10,11 @@ module Lambo.Parser
   )
 where
 
-import Control.Applicative ((<|>))
+import Control.Applicative (optional)
 import Control.Monad ((>=>))
 import Data.Fix (Fix (..))
 import Data.Foldable (asum)
+import Data.Maybe (fromMaybe)
 import Data.Text (Text)
 import Lambo.Lexer (Token (..), lex)
 import Lambo.Syntax (Expression, ExpressionF (..))
@@ -53,16 +54,14 @@ grammar = mdo
       Token_Identifier name -> Just name
       _ -> Nothing
 
-  indexProd <- rule "index" do
-    _ <- Earley.token Token_At
-    index <- Earley.terminal \case
-      Token_Number number -> Just number
-      _ -> Nothing
-    pure index
-
   variableProd <- rule "variable" do
     name <- identifierProd
-    index <- indexProd <|> pure 0
+    index <- fromMaybe 0 <$> optional do
+      _ <- Earley.token Token_At
+      index <- Earley.terminal \case
+        Token_Number number -> Just number
+        _ -> Nothing
+      pure index
     pure (ExpressionF_Variable name index)
 
   abstractionProd <- rule "abstraction" do
