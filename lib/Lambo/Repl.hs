@@ -1,4 +1,5 @@
 {-# LANGUAGE BlockArguments #-}
+{-# LANGUAGE LambdaCase #-}
 
 module Lambo.Repl
   ( repl
@@ -6,6 +7,7 @@ module Lambo.Repl
 where
 
 import Control.Monad.IO.Class (MonadIO (..))
+import Data.Text (Text)
 import Lambo.Lexer (lex)
 import Lambo.Parser (parse)
 import Lambo.Printer (print)
@@ -37,19 +39,20 @@ repl = liftIO $ Repline.evalReplOpts ReplOpts
 
 lexCommand :: MonadIO m => String -> m ()
 lexCommand string = liftIO do
-  case lex (Text.pack string) of
-    Left err ->
-      Text.hPutStrLn IO.stderr err
-    Right tokens -> do
-      Text.putStrLn (print tokens)
-      pPrintNoColor tokens
+  lex (Text.pack string) `dischargeError` \tokens -> do
+    Text.putStrLn (print tokens)
+    pPrintNoColor tokens
 
 
 parseCommand :: MonadIO m => String -> m ()
 parseCommand string = liftIO do
-  case parse (Text.pack string) of
-    Left err ->
-      Text.hPutStrLn IO.stderr err
-    Right expression -> do
-      Text.putStrLn (print expression)
-      pPrintNoColor expression
+  parse (Text.pack string) `dischargeError` \expression -> do
+    Text.putStrLn (print expression)
+    pPrintNoColor expression
+
+
+dischargeError :: MonadIO m => Either Text a -> (a -> m ()) -> m ()
+dischargeError e k =
+  case e of
+    Left err -> liftIO $ Text.hPutStrLn IO.stderr err
+    Right x -> k x
