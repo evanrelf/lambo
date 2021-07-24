@@ -39,12 +39,12 @@ library
     , transformers
   exposed-modules:
     Lambo
+    Lambo.Expression
     Lambo.Lexer
     Lambo.Parser
     Lambo.Printer
     Lambo.QuasiQuoters
     Lambo.Repl
-    Lambo.Syntax
 
 
 executable lambo

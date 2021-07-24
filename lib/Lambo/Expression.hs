@@ -1,7 +1,7 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DerivingStrategies #-}
 
-module Lambo.Syntax
+module Lambo.Expression
   ( Expression (..)
   )
 where

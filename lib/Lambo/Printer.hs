@@ -14,7 +14,7 @@ where
 
 import Data.Text (Text)
 import Lambo.Lexer (Token (..))
-import Lambo.Syntax (Expression (..))
+import Lambo.Expression (Expression (..))
 import Prelude hiding (print)
 
 import qualified Data.Text as Text

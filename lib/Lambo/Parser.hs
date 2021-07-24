@@ -16,7 +16,7 @@ import Data.Foldable (asum)
 import Data.Maybe (fromMaybe)
 import Data.Text (Text)
 import Lambo.Lexer (Token (..), lex)
-import Lambo.Syntax (Expression (..))
+import Lambo.Expression (Expression (..))
 import Text.Earley ((<?>))
 import Prelude hiding (lex)
 
