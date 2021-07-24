@@ -127,7 +127,9 @@ test_parser = Tasty.testGroup "Parser" $ mconcat
       (Expression_Variable "x" 0)
 
   , allEqual
-      ["(f x)"]
+      [ "(f x)"
+      , "f x"
+      ]
       (Expression_Application
         (Expression_Variable "f" 0)
         (Expression_Variable "x" 0))

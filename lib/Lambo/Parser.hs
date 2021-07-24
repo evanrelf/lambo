@@ -42,6 +42,12 @@ grammar :: Earley.Grammar r (Earley.Prod r Text Token Expression)
 grammar = mdo
   let rule name prod = Earley.rule (prod <?> name)
 
+  let inParens prod = do
+        _ <- Earley.token Token_OpenParen
+        x <- prod
+        _ <- Earley.token Token_CloseParen
+        pure x
+
   identifierProd <- rule "identifier" do
     Earley.terminal \case
       Token_Identifier name -> Just name
@@ -67,10 +73,8 @@ grammar = mdo
     pure (ExpressionF_Abstraction argument definition)
 
   applicationProd <- rule "application" do
-    _ <- Earley.token Token_OpenParen
     function <- expressionProd
     argument <- expressionProd
-    _ <- Earley.token Token_CloseParen
     pure (ExpressionF_Application function argument)
 
   expressionProd <- rule "expression" do
@@ -78,6 +82,8 @@ grammar = mdo
       [ variableProd
       , abstractionProd
       , applicationProd
+      , inParens abstractionProd
+      , inParens applicationProd
       ]
 
   pure expressionProd
