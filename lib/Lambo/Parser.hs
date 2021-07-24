@@ -72,15 +72,24 @@ grammar = mdo
     pure (ExpressionF_Abstraction argument definition)
 
   applicationProd <- rule "application" do
-    function <- expressionProd
-    argument <- expressionProd
+    function <- Fix <$> asum
+      [ inParens abstractionProd
+      , inParens applicationProd
+      , applicationProd
+      , variableProd
+      ]
+    argument <- Fix <$> asum
+      [ inParens abstractionProd
+      , inParens applicationProd
+      , variableProd
+      ]
     pure (ExpressionF_Application function argument)
 
   expressionProd <- rule "expression" do
     asum
-      [ Fix <$> variableProd
-      , Fix <$> abstractionProd
+      [ Fix <$> abstractionProd
       , Fix <$> applicationProd
+      , Fix <$> variableProd
       , inParens expressionProd
       ]
 
