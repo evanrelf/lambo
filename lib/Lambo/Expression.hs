@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 
 module Lambo.Expression
@@ -10,6 +11,7 @@ where
 import Data.Data (Data)
 import Data.Scientific (Scientific)
 import Data.Text (Text)
+import GHC.Generics (Generic)
 
 
 -- | @λf. (λx. f (x x)) (λx. f (x x))@
@@ -22,10 +24,10 @@ data Expression
     -- ^ @λ \<variable\> . \<expression\>@
   | Expression_Application Expression Expression
     -- ^ @( \<expression\> \<expression\> )@
-  deriving stock (Show, Eq, Data)
+  deriving stock (Show, Eq, Data, Generic)
 
 
 data Literal
   = Literal_Number Scientific
     -- ^ @42@
-  deriving stock (Show, Eq, Data)
+  deriving stock (Show, Eq, Data, Generic)

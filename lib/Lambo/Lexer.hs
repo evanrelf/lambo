@@ -1,5 +1,6 @@
 {-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings #-}
 
@@ -14,6 +15,7 @@ import Data.Data (Data)
 import Data.Foldable (asum)
 import Data.Text (Text)
 import Data.Void (Void)
+import GHC.Generics (Generic)
 import Prelude hiding (lex)
 
 import qualified Data.Char as Char
@@ -40,7 +42,7 @@ data Token
     -- ^ @(@
   | Token_CloseParen
     -- ^ @)@
-  deriving stock (Show, Eq, Data)
+  deriving stock (Show, Eq, Data, Generic)
 
 
 type Parser = Megaparsec.Parsec Void Text
