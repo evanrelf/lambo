@@ -8,6 +8,7 @@ module Lambo.Expression
 where
 
 import Data.Data (Data)
+import Data.Scientific (Scientific)
 import Data.Text (Text)
 
 
@@ -25,6 +26,6 @@ data Expression
 
 
 data Literal
-  = Literal_Number Int
+  = Literal_Number Scientific
     -- ^ @42@
   deriving stock (Show, Eq, Data)
