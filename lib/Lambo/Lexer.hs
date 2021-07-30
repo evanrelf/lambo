@@ -68,7 +68,7 @@ parseToken = asum
   , Token_At
       <$ parseSymbol "@"
   , Token_Number
-      <$> parseNumber
+      <$> parseLexeme Megaparsec.Lexer.decimal
   , Token_OpenParen
       <$ parseSymbol "("
   , Token_CloseParen
@@ -91,10 +91,6 @@ parseIdentifier = parseLexeme do
     ]
   pure (c `Text.cons` cs)
 
-
-parseNumber :: Parser Int
-parseNumber = parseLexeme do
-  read <$> Megaparsec.some Megaparsec.digitChar
 
 parseLexeme :: Parser a -> Parser a
 parseLexeme = Megaparsec.Lexer.lexeme parseSpace

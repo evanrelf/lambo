@@ -15,8 +15,8 @@ import Control.Monad ((>=>))
 import Data.Foldable (asum)
 import Data.Maybe (fromMaybe)
 import Data.Text (Text)
+import Lambo.Expression (Expression (..), Literal (..))
 import Lambo.Lexer (Token (..), lex)
-import Lambo.Expression (Expression (..))
 import Text.Earley ((<?>))
 import Prelude hiding (lex)
 
@@ -53,6 +53,17 @@ grammar = mdo
       Token_Identifier name -> Just name
       _ -> Nothing
 
+  numberProd <- rule "number" do
+    Earley.terminal \case
+      Token_Number n ->
+        Just (Expression_Literal (Literal_Number n))
+      _ ->
+        Nothing
+
+  literalProd <- rule "literal" $ asum
+    [ numberProd
+    ]
+
   variableProd <- rule "variable" do
     name <- identifierProd
     index <- fromMaybe 0 <$> optional do
@@ -76,11 +87,13 @@ grammar = mdo
       , inParens applicationProd
       , applicationProd
       , variableProd
+      , literalProd
       ]
     argument <- asum
       [ inParens abstractionProd
       , inParens applicationProd
       , variableProd
+      , literalProd
       ]
     pure (Expression_Application function argument)
 
@@ -89,6 +102,7 @@ grammar = mdo
       [ abstractionProd
       , applicationProd
       , variableProd
+      , literalProd
       , inParens expressionProd
       ]
 
