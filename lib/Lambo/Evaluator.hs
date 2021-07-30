@@ -11,13 +11,13 @@ import Lambo.Expression (Expression (..))
 evaluate :: Expression -> Expression
 evaluate = \case
   Expression_Literal literal ->
-    undefined
+    Expression_Literal literal
 
   Expression_Variable name index ->
-    undefined
+    Expression_Variable name index
 
   Expression_Abstraction argument definition ->
-    undefined
+    Expression_Abstraction argument (evaluate definition)
 
   Expression_Application function argument ->
-    undefined
+    Expression_Application (evaluate function) (evaluate argument)
