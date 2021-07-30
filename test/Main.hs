@@ -1,13 +1,16 @@
 {-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes #-}
 
 module Main (main) where
 
 import Data.Function ((&))
 import Data.Text (Text)
+import Lambo.Evaluator (evaluate)
+import Lambo.Expression (Expression (..))
 import Lambo.Lexer (Token (..), lex)
 import Lambo.Parser (parse)
-import Lambo.Expression (Expression (..))
+import Lambo.QuasiQuoters (parsed)
 import Test.Tasty.HUnit ((@?=))
 import Prelude hiding (lex)
 
@@ -20,6 +23,7 @@ main :: IO ()
 main = Tasty.defaultMain $ Tasty.testGroup "lambo"
   [ test_lexer
   , test_parser
+  , test_evaluator
   ]
 
 
@@ -205,3 +209,20 @@ test_parser = Tasty.testGroup "Parser" $ mconcat
   allEqual :: [Text] -> Expression -> [Tasty.TestTree]
   allEqual inputs output = inputs & fmap \input ->
     HUnit.testCase (Text.unpack input) (parse input @?= Right output)
+
+
+test_evaluator :: Tasty.TestTree
+test_evaluator = Tasty.testGroup "Evaluator"
+  [ HUnit.testCase "identity" do
+      evaluate [parsed|(\x.x)|] @?= [parsed|(\x.x)|]
+
+  , HUnit.testCase "arithmetic" do
+      evaluate [parsed|add 2 2|] @?= [parsed|4|]
+      evaluate [parsed|sub 2 2|] @?= [parsed|0|]
+      evaluate [parsed|mul 5 2|] @?= [parsed|10|]
+      evaluate [parsed|div 9 2|] @?= [parsed|4.5|]
+
+  , HUnit.testCase "recursive rewriting" do
+      evaluate [parsed|add (add 1 1) (add 1 1)|] @?= [parsed|4|]
+      evaluate [parsed|foo (add 1 1) (add 1 1)|] @?= [parsed|foo 2 2|]
+  ]

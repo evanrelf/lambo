@@ -31,6 +31,7 @@ library
   hs-source-dirs: lib
   build-depends:
     , Earley
+    , generic-lens
     , lens
     , megaparsec
     , pretty-simple
