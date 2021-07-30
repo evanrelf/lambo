@@ -6,11 +6,10 @@ module Main (main) where
 
 import Data.Function ((&))
 import Data.Text (Text)
-import Lambo.Evaluator (evaluate)
 import Lambo.Expression (Expression (..))
 import Lambo.Lexer (Token (..), lex)
 import Lambo.Parser (parse)
-import Lambo.QuasiQuoters (parsed)
+import Lambo.QuasiQuoters (evaluated, parsed)
 import Test.Tasty.HUnit ((@?=))
 import Prelude hiding (lex)
 
@@ -214,15 +213,15 @@ test_parser = Tasty.testGroup "Parser" $ mconcat
 test_evaluator :: Tasty.TestTree
 test_evaluator = Tasty.testGroup "Evaluator"
   [ HUnit.testCase "identity" do
-      evaluate [parsed|(\x.x)|] @?= [parsed|(\x.x)|]
+      [evaluated|(\x.x)|] @?= [parsed|(\x.x)|]
 
   , HUnit.testCase "arithmetic" do
-      evaluate [parsed|add 2 2|] @?= [parsed|4|]
-      evaluate [parsed|sub 2 2|] @?= [parsed|0|]
-      evaluate [parsed|mul 5 2|] @?= [parsed|10|]
-      evaluate [parsed|div 9 2|] @?= [parsed|4.5|]
+      [evaluated|add 2 2|] @?= [parsed|4|]
+      [evaluated|sub 2 2|] @?= [parsed|0|]
+      [evaluated|mul 5 2|] @?= [parsed|10|]
+      [evaluated|div 9 2|] @?= [parsed|4.5|]
 
   , HUnit.testCase "recursive rewriting" do
-      evaluate [parsed|add (add 1 1) (add 1 1)|] @?= [parsed|4|]
-      evaluate [parsed|foo (add 1 1) (add 1 1)|] @?= [parsed|foo 2 2|]
+      [evaluated|add (add 1 1) (add 1 1)|] @?= [parsed|4|]
+      [evaluated|foo (add 1 1) (add 1 1)|] @?= [parsed|foo 2 2|]
   ]

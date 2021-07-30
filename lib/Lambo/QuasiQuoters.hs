@@ -8,11 +8,13 @@
 module Lambo.QuasiQuoters
   ( lexed
   , parsed
+  , evaluated
   )
 where
 
 import Data.Data (Data)
 import Data.Text (Text)
+import Lambo.Evaluator (evaluate)
 import Lambo.Lexer (lex)
 import Lambo.Parser (parse)
 import Language.Haskell.TH.Quote (QuasiQuoter (..))
@@ -30,6 +32,10 @@ lexed = qqFrom lex
 
 parsed :: QuasiQuoter
 parsed = qqFrom parse
+
+
+evaluated :: QuasiQuoter
+evaluated = qqFrom \text -> evaluate <$> parse text
 
 
 qqFrom :: Data a => (Text -> Either Text a) -> QuasiQuoter
