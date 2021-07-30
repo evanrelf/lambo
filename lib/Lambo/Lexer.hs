@@ -32,7 +32,7 @@ data Token
     -- ^ @x@
   | Token_At
     -- ^ @\@@
-  | Token_Number Int
+  | Token_Decimal Int
     -- ^ @42@
   | Token_OpenParen
     -- ^ @(@
@@ -67,7 +67,7 @@ parseToken = asum
       <$> parseIdentifier
   , Token_At
       <$ parseSymbol "@"
-  , Token_Number
+  , Token_Decimal
       <$> parseLexeme Megaparsec.Lexer.decimal
   , Token_OpenParen
       <$ parseSymbol "("

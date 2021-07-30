@@ -30,7 +30,7 @@ instance Print Token where
     Token_Dot -> "."
     Token_Identifier name -> name
     Token_At -> "@"
-    Token_Number number -> Text.pack (show number)
+    Token_Decimal number -> Text.pack (show number)
     Token_OpenParen -> "("
     Token_CloseParen -> ")"
 

@@ -55,7 +55,7 @@ grammar = mdo
 
   numberProd <- rule "number" do
     Earley.terminal \case
-      Token_Number n ->
+      Token_Decimal n ->
         Just (Expression_Literal (Literal_Number n))
       _ ->
         Nothing
@@ -69,7 +69,7 @@ grammar = mdo
     index <- fromMaybe 0 <$> optional do
       _ <- Earley.token Token_At
       index <- Earley.terminal \case
-        Token_Number number -> Just number
+        Token_Decimal number -> Just number
         _ -> Nothing
       pure index
     pure (Expression_Variable name index)
