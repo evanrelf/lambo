@@ -10,9 +10,10 @@ module Lambo.Parser
   )
 where
 
-import Control.Applicative (optional)
+import Control.Applicative (optional, (<|>))
 import Control.Monad ((>=>))
 import Data.Foldable (asum)
+import Data.Functor (($>))
 import Data.Maybe (fromMaybe)
 import Data.Text (Text)
 import Lambo.Expression (Expression (..), Literal (..))
@@ -53,12 +54,35 @@ grammar = mdo
       Token_Identifier name -> Just name
       _ -> Nothing
 
-  numberProd <- rule "number" do
-    Earley.terminal \case
-      Token_Decimal n ->
-        Just (Expression_Literal (Literal_Number n))
-      _ ->
-        Nothing
+  numberProd <- rule "number" $
+    let
+      negatedProd = (Earley.token Token_Dash $> True) <|> pure False
+      decimalProd =
+        Earley.terminal \case
+          Token_Decimal number -> Just number
+          _ -> Nothing
+      toExpr string = Expression_Literal (Literal_Number (read string))
+    in
+    asum
+      [ do
+          let f negated n1 n2 =
+                if negated
+                  then "-" <> show n1 <> "." <> show n2
+                  else show n1 <> "." <> show n2
+          negated <- negatedProd
+          n1 <- decimalProd
+          _ <- Earley.token Token_Dot
+          n2 <- decimalProd
+          pure $ toExpr (f negated n1 n2)
+      , do
+          let f negated n =
+                if negated
+                  then "-" <> show n
+                  else show n
+          negated <- negatedProd
+          n <- decimalProd
+          pure $ toExpr (f negated n)
+      ]
 
   literalProd <- rule "literal" $ asum
     [ numberProd
