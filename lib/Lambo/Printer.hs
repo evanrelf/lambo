@@ -14,7 +14,7 @@ where
 
 import Data.Text (Text)
 import Lambo.Lexer (Token (..))
-import Lambo.Expression (Expression (..))
+import Lambo.Expression (Expression (..), Literal (..))
 import Prelude hiding (print)
 
 import qualified Data.Text as Text
@@ -39,8 +39,16 @@ instance Print [Token] where
   print = Text.unwords . fmap print
 
 
+instance Print Literal where
+  print = \case
+    Literal_Number n ->
+      Text.pack (show n)
+
+
 instance Print Expression where
   print = \case
+    Expression_Literal literal ->
+      print literal
     Expression_Variable name 0 ->
       name
     Expression_Variable name index ->
