@@ -1,23 +1,29 @@
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Lambo.Evaluator
   ( evaluate
   )
 where
 
-import Lambo.Expression (Expression (..))
+import Lambo.Expression (Expression (..), Literal (..))
+
+import qualified Control.Lens as Lens
 
 
 evaluate :: Expression -> Expression
-evaluate = \case
-  Expression_Literal literal ->
-    Expression_Literal literal
+evaluate = Lens.transform arithmetic
 
-  Expression_Variable name index ->
-    Expression_Variable name index
 
-  Expression_Abstraction argument definition ->
-    Expression_Abstraction argument (evaluate definition)
-
-  Expression_Application function argument ->
-    Expression_Application (evaluate function) (evaluate argument)
+arithmetic :: Expression -> Expression
+arithmetic = \case
+  Expression_Application
+    (Expression_Application
+      (Expression_Variable function _)
+      (Expression_Literal (Literal_Number x)))
+    (Expression_Literal (Literal_Number y))
+    | function == "add" -> Expression_Literal (Literal_Number (x + y))
+    | function == "sub" -> Expression_Literal (Literal_Number (x - y))
+    | function == "mul" -> Expression_Literal (Literal_Number (x * y))
+    | function == "div" -> Expression_Literal (Literal_Number (x / y))
+  e -> e

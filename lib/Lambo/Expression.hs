@@ -13,6 +13,8 @@ import Data.Scientific (Scientific)
 import Data.Text (Text)
 import GHC.Generics (Generic)
 
+import qualified Control.Lens as Lens
+
 
 -- | @λf. (λx. f (x x)) (λx. f (x x))@
 data Expression
@@ -26,8 +28,12 @@ data Expression
     -- ^ @( \<expression\> \<expression\> )@
   deriving stock (Show, Eq, Data, Generic)
 
+instance Lens.Plated Expression
+
 
 data Literal
   = Literal_Number Scientific
     -- ^ @42@
   deriving stock (Show, Eq, Data, Generic)
+
+instance Lens.Plated Literal
