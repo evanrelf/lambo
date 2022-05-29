@@ -128,10 +128,7 @@ test_parser = Tasty.testGroup "Parser" do
         [ "(f x)"
         , "f x"
         ]
-        ( Expression_Application
-            (Expression_Variable "f" 0)
-            (Expression_Variable "x" 0)
-        )
+        ("f" :$ "x")
     , allEqual
         [ "λx.x"
         , "λx.x@0"
@@ -156,16 +153,7 @@ test_parser = Tasty.testGroup "Parser" do
         [ "(((f x) y) z)"
         , "f x y z"
         ]
-        ( Expression_Application
-            ( Expression_Application
-                ( Expression_Application
-                    (Expression_Variable "f" 0)
-                    (Expression_Variable "x" 0)
-                )
-                (Expression_Variable "y" 0)
-            )
-            (Expression_Variable "z" 0)
-        )
+        ("f" :$ "x" :$ "y" :$ "z")
     , allEqual
         [ "λf.λx.λy.((f y) x)"
         , "λf. λx. λy. f y x"
@@ -176,13 +164,7 @@ test_parser = Tasty.testGroup "Parser" do
                 "x"
                 ( Expression_Abstraction
                     "y"
-                    ( Expression_Application
-                        ( Expression_Application
-                            (Expression_Variable "f" 0)
-                            (Expression_Variable "y" 0)
-                        )
-                        (Expression_Variable "x" 0)
-                    )
+                    ("f" :$ "x" :$ "y")
                 )
             )
         )
@@ -193,23 +175,11 @@ test_parser = Tasty.testGroup "Parser" do
             ( Expression_Application
                 ( Expression_Abstraction
                     "x"
-                    ( Expression_Application
-                        (Expression_Variable "f" 0)
-                        ( Expression_Application
-                            (Expression_Variable "x" 0)
-                            (Expression_Variable "x" 0)
-                        )
-                    )
+                    ("f" :$ "x" :$ "x")
                 )
                 ( Expression_Abstraction
                     "x"
-                    ( Expression_Application
-                        (Expression_Variable "f" 0)
-                        ( Expression_Application
-                            (Expression_Variable "x" 0)
-                            (Expression_Variable "x" 0)
-                        )
-                    )
+                    ("f" :$ "x" :$ "x")
                 )
             )
         )
