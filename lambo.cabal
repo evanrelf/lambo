@@ -1,8 +1,7 @@
-cabal-version: 2.4
+cabal-version: 2.2
 
 name:    lambo
 version: 0.0.0.0
-
 
 common common
   build-depends: base
