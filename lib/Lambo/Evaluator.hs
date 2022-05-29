@@ -7,7 +7,7 @@ module Lambo.Evaluator
   )
 where
 
-import Lambo.Expression (Expression (..))
+import Lambo.Expression.Sugar (Expression (..))
 
 import qualified Control.Lens as Lens
 

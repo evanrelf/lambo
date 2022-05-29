@@ -6,7 +6,7 @@ module Main (main) where
 
 import Data.Function ((&))
 import Data.Text (Text)
-import Lambo.Expression (Expression (..))
+import Lambo.Expression.Sugar (Expression (..))
 import Lambo.Lexer (Token (..), lex)
 import Lambo.Parser (parse)
 import Lambo.QuasiQuoters (evaluated, parsed)

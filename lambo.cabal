@@ -42,6 +42,7 @@ library
     Lambo
     Lambo.Evaluator
     Lambo.Expression
+    Lambo.Expression.Sugar
     Lambo.Lexer
     Lambo.Parser
     Lambo.Printer
