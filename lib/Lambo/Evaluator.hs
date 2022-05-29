@@ -16,9 +16,8 @@ evaluate = Lens.transform arithmetic
 
 arithmetic :: Expression -> Expression
 arithmetic = \case
-  Expression_Variable function _ :$ Number x :$ Number y
-    | function == "add" -> Number (x + y)
-    | function == "sub" -> Number (x - y)
-    | function == "mul" -> Number (x * y)
-    | function == "div" -> Number (x / y)
+  "add" :$ Number x :$ Number y -> Number (x + y)
+  "sub" :$ Number x :$ Number y -> Number (x - y)
+  "mul" :$ Number x :$ Number y -> Number (x * y)
+  "div" :$ Number x :$ Number y -> Number (x / y)
   e -> e

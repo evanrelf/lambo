@@ -18,9 +18,11 @@ where
 import Data.Data (Data)
 import Data.Scientific (Scientific)
 import Data.Text (Text)
+import GHC.Exts (IsString (..))
 import GHC.Generics (Generic)
 
 import qualified Control.Lens as Lens
+import qualified Data.Text as Text
 import qualified Witch
 
 -- | @λf. (λx. f (x x)) (λx. f (x x))@
@@ -36,6 +38,9 @@ data Expression
   deriving stock (Show, Eq, Data, Generic)
 
 instance Lens.Plated Expression
+
+instance IsString Expression where
+  fromString string = Expression_Variable (Text.pack string) 0
 
 data Literal
   = -- | @42@
