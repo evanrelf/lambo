@@ -5,11 +5,12 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE ViewPatterns #-}
 {-# OPTIONS_GHC -Wno-duplicate-exports #-}
 
 module Lambo.Expression
-  ( Expression (.., Number),
+  ( Expression (.., (:$), Number),
     Literal (.., Number),
   )
 where
@@ -45,6 +46,9 @@ instance Lens.Plated Literal
 
 instance Witch.From Literal Expression where
   from = Expression_Literal
+
+pattern (:$) :: Expression -> Expression -> Expression
+pattern (:$) f x = Expression_Application f x
 
 pattern Number ::
   (Witch.From Literal a, Witch.From a Expression) => Scientific -> a
