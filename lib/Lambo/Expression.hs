@@ -10,7 +10,7 @@
 {-# OPTIONS_GHC -Wno-duplicate-exports #-}
 
 module Lambo.Expression
-  ( Expression (.., Number, (:@), (:\), (:$)),
+  ( Expression (.., Number, (:@), (:.), (:$)),
     Literal (.., Number),
   )
 where
@@ -64,8 +64,8 @@ instance IsString Expression where
 pattern (:@) :: Text -> Int -> Expression
 pattern (:@) name index = Expression_Variable name index
 
-pattern (:\) :: Text -> Expression -> Expression
-pattern (:\) name argument = Expression_Abstraction name argument
+pattern (:.) :: Text -> Expression -> Expression
+pattern (:.) name argument = Expression_Abstraction name argument
 
 pattern (:$) :: Expression -> Expression -> Expression
 pattern (:$) left right = Expression_Application left right

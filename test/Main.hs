@@ -137,12 +137,12 @@ test_parser = Tasty.testGroup "Parser" do
         , "((λx.(x)))"
         , "((λx.((x))))"
         ]
-        ("x" :\ "x")
+        ("x" :. "x")
     , allEqual
         [ "λx.x@42"
         , "λx . x@42"
         ]
-        ("x" :\ ("x" :@ 42))
+        ("x" :. ("x" :@ 42))
     , allEqual
         [ "(((f x) y) z)"
         , "f x y z"
@@ -152,10 +152,10 @@ test_parser = Tasty.testGroup "Parser" do
         [ "λf.λx.λy.((f y) x)"
         , "λf. λx. λy. f y x"
         ]
-        ("f" :\ ("x" :\ ("y" :\ ("f" :$ "y" :$ "x"))))
+        ("f" :. ("x" :. ("y" :. ("f" :$ "y" :$ "x"))))
     , allEqual
         ["λf. (λx. f (x x)) (λx. f (x x))"]
-        ("f" :\ (("x" :\ ("f" :$ ("x" :$ "x"))) :$ ("x" :\ ("f" :$ ("x" :$ "x")))))
+        ("f" :. (("x" :. ("f" :$ ("x" :$ "x"))) :$ ("x" :. ("f" :$ ("x" :$ "x")))))
     ]
   where
     allEqual :: [Text] -> Expression -> [Tasty.TestTree]
