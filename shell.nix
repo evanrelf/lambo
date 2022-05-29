@@ -8,5 +8,6 @@ lambo.env.overrideAttrs (prev: {
   buildInputs = with pkgs; [
     cabal-install
     ghcid
+    haskellPackages.fourmolu
   ];
 })
