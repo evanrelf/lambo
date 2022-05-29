@@ -37,6 +37,7 @@ library
     , template-haskell
     , text
     , transformers
+    , witch
   exposed-modules:
     Lambo
     Lambo.Evaluator
