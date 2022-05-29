@@ -142,7 +142,7 @@ test_parser = Tasty.testGroup "Parser" do
         [ "λx.x@42"
         , "λx . x@42"
         ]
-        ("x" :\ Expression_Variable "x" 42)
+        ("x" :\ ("x" :@ 42))
     , allEqual
         [ "(((f x) y) z)"
         , "f x y z"
