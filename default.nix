@@ -1,5 +1,5 @@
 let
-  pkgs = import ./nix/nixpkgs.nix { };
+  pkgs = import <nixpkgs> { };
 
 in
 pkgs.haskellPackages.callCabal2nix "lambo" ./. { }
