@@ -9,5 +9,6 @@ lambo.env.overrideAttrs (prev: {
     cabal-install
     ghcid
     haskellPackages.fourmolu
+    nixpkgs-fmt
   ];
 })
