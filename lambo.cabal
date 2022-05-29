@@ -17,13 +17,11 @@ common common
     -Wmissing-home-modules
     -Wredundant-constraints
 
-
 common executable
   ghc-options:
     -threaded
     -rtsopts
     -with-rtsopts=-N
-
 
 library
   import: common
@@ -49,7 +47,6 @@ library
     Lambo.QuasiQuoters
     Lambo.Repl
 
-
 executable lambo
   import:
     , common
@@ -61,7 +58,6 @@ executable lambo
     , optparse-applicative
     , pretty-simple
     , text
-
 
 test-suite test
   import:
