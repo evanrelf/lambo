@@ -5,8 +5,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Lambo.Lexer
-  ( Token (..)
-  , lex
+  ( Token (..),
+    lex,
   )
 where
 
@@ -24,29 +24,26 @@ import qualified Text.Megaparsec as Megaparsec
 import qualified Text.Megaparsec.Char as Megaparsec
 import qualified Text.Megaparsec.Char.Lexer as Megaparsec.Lexer
 
-
 data Token
-  = Token_Lambda
-    -- ^ @λ@
-  | Token_Dot
-    -- ^ @.@
-  | Token_Identifier Text
-    -- ^ @x@
-  | Token_At
-    -- ^ @\@@
-  | Token_Dash
-    -- ^ @-@
-  | Token_Decimal Int
-    -- ^ @42@
-  | Token_OpenParen
-    -- ^ @(@
-  | Token_CloseParen
-    -- ^ @)@
+  = -- | @λ@
+    Token_Lambda
+  | -- | @.@
+    Token_Dot
+  | -- | @x@
+    Token_Identifier Text
+  | -- | @\@@
+    Token_At
+  | -- | @-@
+    Token_Dash
+  | -- | @42@
+    Token_Decimal Int
+  | -- | @(@
+    Token_OpenParen
+  | -- | @)@
+    Token_CloseParen
   deriving stock (Show, Eq, Data, Generic)
 
-
 type Parser = Megaparsec.Parsec Void Text
-
 
 lex :: Text -> Either Text [Token]
 lex source =
@@ -56,61 +53,64 @@ lex source =
     Right tokens ->
       Right tokens
 
-
 parseTokens :: Parser [Token]
 parseTokens = parseSpace *> Megaparsec.manyTill parseToken Megaparsec.eof
 
-
 parseToken :: Parser Token
-parseToken = asum
-  [ Token_Lambda
-      <$ (parseSymbol "λ" <|> parseSymbol "\\")
-  , Token_Dot
-      <$ (parseSymbol "." <|> parseSymbol "->")
-  , Token_Identifier
-      <$> parseIdentifier
-  , Token_At
-      <$ parseSymbol "@"
-  , Token_Dash
-      <$ parseSymbol "-"
-  , Token_Decimal
-      <$> parseLexeme Megaparsec.Lexer.decimal
-  , Token_OpenParen
-      <$ parseSymbol "("
-  , Token_CloseParen
-      <$ parseSymbol ")"
-  ]
-
+parseToken =
+  asum
+    [ Token_Lambda
+        <$ (parseSymbol "λ" <|> parseSymbol "\\")
+    , Token_Dot
+        <$ (parseSymbol "." <|> parseSymbol "->")
+    , Token_Identifier
+        <$> parseIdentifier
+    , Token_At
+        <$ parseSymbol "@"
+    , Token_Dash
+        <$ parseSymbol "-"
+    , Token_Decimal
+        <$> parseLexeme Megaparsec.Lexer.decimal
+    , Token_OpenParen
+        <$ parseSymbol "("
+    , Token_CloseParen
+        <$ parseSymbol ")"
+    ]
 
 parseIdentifier :: Parser Text
 parseIdentifier = parseLexeme do
-  c <- Megaparsec.satisfy \char -> any ($ char)
-    [ Char.isAsciiLower
-    , (==) '_'
-    ]
-  cs <- Megaparsec.takeWhileP Nothing \char -> any ($ char)
-    [ Char.isAsciiLower
-    , Char.isAsciiUpper
-    , Char.isDigit
-    , (==) '_'
-    , (==) '\''
-    ]
+  c <-
+    Megaparsec.satisfy \char ->
+      any
+        ($ char)
+        [ Char.isAsciiLower
+        , (==) '_'
+        ]
+  cs <-
+    Megaparsec.takeWhileP Nothing \char ->
+      any
+        ($ char)
+        [ Char.isAsciiLower
+        , Char.isAsciiUpper
+        , Char.isDigit
+        , (==) '_'
+        , (==) '\''
+        ]
   pure (c `Text.cons` cs)
-
 
 parseLexeme :: Parser a -> Parser a
 parseLexeme = Megaparsec.Lexer.lexeme parseSpace
 
-
 parseSymbol :: Text -> Parser Text
 parseSymbol = Megaparsec.Lexer.symbol parseSpace
-
 
 parseSpace :: Parser ()
 parseSpace =
   Megaparsec.Lexer.space
     Megaparsec.space1
-    (   Megaparsec.Lexer.skipLineComment "#"
-    <|> Megaparsec.Lexer.skipLineComment "--"
+    ( asum
+        [ Megaparsec.Lexer.skipLineComment "#"
+        , Megaparsec.Lexer.skipLineComment "--"
+        ]
     )
     empty

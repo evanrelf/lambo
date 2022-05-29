@@ -6,23 +6,21 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Lambo.Printer
-  ( Print
-  , print
-  , PrintShow (..)
+  ( Print,
+    print,
+    PrintShow (..),
   )
 where
 
 import Data.Text (Text)
-import Lambo.Lexer (Token (..))
 import Lambo.Expression (Expression (..), Literal (..))
+import Lambo.Lexer (Token (..))
 import Prelude hiding (print)
 
 import qualified Data.Text as Text
 
-
 class Print a where
   print :: a -> Text
-
 
 instance Print Token where
   print = \case
@@ -35,16 +33,13 @@ instance Print Token where
     Token_OpenParen -> "("
     Token_CloseParen -> ")"
 
-
 instance Print [Token] where
   print = Text.unwords . fmap print
-
 
 instance Print Literal where
   print = \case
     Literal_Number n ->
       Text.pack (show n)
-
 
 instance Print Expression where
   print = \case
@@ -59,10 +54,8 @@ instance Print Expression where
     Expression_Application function argument ->
       "(" <> print function <> " " <> print argument <> ")"
 
-
-newtype PrintShow a = PrintShow { unPrintShow :: a }
-  deriving newtype Print
-
+newtype PrintShow a = PrintShow {unPrintShow :: a}
+  deriving newtype (Print)
 
 instance Print a => Show (PrintShow a) where
   show = Text.unpack . print

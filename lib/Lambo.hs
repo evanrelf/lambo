@@ -1,7 +1,4 @@
-module Lambo
-  ( module X
-  )
-where
+module Lambo (module X) where
 
 import Lambo.Evaluator as X
 import Lambo.Expression as X

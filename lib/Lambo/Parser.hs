@@ -5,8 +5,8 @@
 {-# LANGUAGE RecursiveDo #-}
 
 module Lambo.Parser
-  ( parse
-  , parseTokens
+  ( parse,
+    parseTokens,
   )
 where
 
@@ -24,20 +24,16 @@ import Prelude hiding (lex)
 import qualified Data.Text as Text
 import qualified Text.Earley as Earley
 
-
 parse :: Text -> Either Text Expression
 parse = lex >=> parseTokens
-
 
 parseTokens :: [Token] -> Either Text Expression
 parseTokens tokens =
   case Earley.fullParses (Earley.parser grammar) tokens of
     ([], report) ->
       Left $ Text.pack (show report)
-
     (result : _, _) ->
       Right result
-
 
 grammar :: Earley.Grammar r (Earley.Prod r Text Token Expression)
 grammar = mdo
@@ -54,48 +50,48 @@ grammar = mdo
       Token_Identifier name -> Just name
       _ -> Nothing
 
-  numberProd <- rule "number" $
-    let
-      negatedProd = (Earley.token Token_Dash $> True) <|> pure False
-      decimalProd =
-        Earley.terminal \case
-          Token_Decimal number -> Just number
-          _ -> Nothing
-      toExpr string = Expression_Literal (Literal_Number (read string))
-    in
-    asum
-      [ do
-          let f negated n1 n2 =
-                if negated
-                  then "-" <> show n1 <> "." <> show n2
-                  else show n1 <> "." <> show n2
-          negated <- negatedProd
-          n1 <- decimalProd
-          _ <- Earley.token Token_Dot
-          n2 <- decimalProd
-          pure $ toExpr (f negated n1 n2)
-      , do
-          let f negated n =
-                if negated
-                  then "-" <> show n
-                  else show n
-          negated <- negatedProd
-          n <- decimalProd
-          pure $ toExpr (f negated n)
-      ]
+  numberProd <- rule "number" do
+    let negatedProd = (Earley.token Token_Dash $> True) <|> pure False
+        decimalProd =
+          Earley.terminal \case
+            Token_Decimal number -> Just number
+            _ -> Nothing
+        toExpr string = Expression_Literal (Literal_Number (read string))
+     in asum
+          [ do
+              let f negated n1 n2 =
+                    if negated
+                      then "-" <> show n1 <> "." <> show n2
+                      else show n1 <> "." <> show n2
+              negated <- negatedProd
+              n1 <- decimalProd
+              _ <- Earley.token Token_Dot
+              n2 <- decimalProd
+              pure $ toExpr (f negated n1 n2)
+          , do
+              let f negated n =
+                    if negated
+                      then "-" <> show n
+                      else show n
+              negated <- negatedProd
+              n <- decimalProd
+              pure $ toExpr (f negated n)
+          ]
 
-  literalProd <- rule "literal" $ asum
-    [ numberProd
-    ]
+  literalProd <- rule "literal" do
+    asum
+      [ numberProd
+      ]
 
   variableProd <- rule "variable" do
     name <- identifierProd
-    index <- fromMaybe 0 <$> optional do
-      _ <- Earley.token Token_At
-      index <- Earley.terminal \case
-        Token_Decimal number -> Just number
-        _ -> Nothing
-      pure index
+    index <-
+      fromMaybe 0 <$> optional do
+        _ <- Earley.token Token_At
+        index <- Earley.terminal \case
+          Token_Decimal number -> Just number
+          _ -> Nothing
+        pure index
     pure (Expression_Variable name index)
 
   abstractionProd <- rule "abstraction" do
@@ -106,19 +102,21 @@ grammar = mdo
     pure (Expression_Abstraction argument definition)
 
   applicationProd <- rule "application" do
-    function <- asum
-      [ inParens abstractionProd
-      , inParens applicationProd
-      , applicationProd
-      , variableProd
-      , literalProd
-      ]
-    argument <- asum
-      [ inParens abstractionProd
-      , inParens applicationProd
-      , variableProd
-      , literalProd
-      ]
+    function <-
+      asum
+        [ inParens abstractionProd
+        , inParens applicationProd
+        , applicationProd
+        , variableProd
+        , literalProd
+        ]
+    argument <-
+      asum
+        [ inParens abstractionProd
+        , inParens applicationProd
+        , variableProd
+        , literalProd
+        ]
     pure (Expression_Application function argument)
 
   expressionProd <- rule "expression" do

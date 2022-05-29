@@ -6,9 +6,9 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module Lambo.QuasiQuoters
-  ( lexed
-  , parsed
-  , evaluated
+  ( lexed,
+    parsed,
+    evaluated,
   )
 where
 
@@ -25,41 +25,39 @@ import qualified Data.Text as Text
 import qualified Language.Haskell.TH.Quote as TH
 import qualified Language.Haskell.TH.Syntax as TH
 
-
 lexed :: QuasiQuoter
 lexed = qqFrom lex
-
 
 parsed :: QuasiQuoter
 parsed = qqFrom parse
 
-
 evaluated :: QuasiQuoter
 evaluated = qqFrom \text -> evaluate <$> parse text
-
 
 qqFrom :: Data a => (Text -> Either Text a) -> QuasiQuoter
 qqFrom parser = QuasiQuoter{quoteExp, quotePat, quoteType, quoteDec}
   where
-  quoteExp string =
-    case parser (Text.pack string) of
-      Left err -> fail (Text.unpack err)
-      Right x -> liftDataWithText x
+    quoteExp string =
+      case parser (Text.pack string) of
+        Left err -> fail (Text.unpack err)
+        Right x -> liftDataWithText x
 
-  quotePat = unsupported "pattern"
+    quotePat = unsupported "pattern"
 
-  quoteType = unsupported "type"
+    quoteType = unsupported "type"
 
-  quoteDec = unsupported "declaration"
+    quoteDec = unsupported "declaration"
 
-  unsupported context _ = fail $ unwords
-    [ "Unsupported operation: this QuasiQuoter cannot be used in a "
-    , context <> "context"
-    ]
+    unsupported context _ =
+      fail $
+        unwords
+          [ "Unsupported operation: this QuasiQuoter cannot be used in a "
+          , context <> "context"
+          ]
 
-  -- https://stackoverflow.com/q/38143464
-  liftDataWithText :: Data a => a -> TH.Q TH.Exp
-  liftDataWithText = TH.dataToExpQ \x -> liftText <$> Data.cast x
+    -- https://stackoverflow.com/q/38143464
+    liftDataWithText :: Data a => a -> TH.Q TH.Exp
+    liftDataWithText = TH.dataToExpQ \x -> liftText <$> Data.cast x
 
-  liftText :: Text -> TH.Q TH.Exp
-  liftText text = TH.AppE (TH.VarE 'Text.pack) <$> TH.lift (Text.unpack text)
+    liftText :: Text -> TH.Q TH.Exp
+    liftText text = TH.AppE (TH.VarE 'Text.pack) <$> TH.lift (Text.unpack text)
